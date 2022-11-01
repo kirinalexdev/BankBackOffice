@@ -18,7 +18,7 @@ public class KafkaProducer {
 
         Message<CardOrder> message = MessageBuilder
                 .withPayload(cardOrder)
-                .setHeader(KafkaHeaders.TOPIC, "topic1") // TODO переименовать
+                .setHeader(KafkaHeaders.TOPIC, "backoffice.cardorder") // TODO переименовать
                 .build();
 
         kafkaTemplate.send(message);
