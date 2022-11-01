@@ -11,7 +11,7 @@ import java.util.Date;
 @Setter
 @Builder
 @ToString
-@AllArgsConstructor // нужно иначе ругается на @Builder
+@AllArgsConstructor // нужно, иначе ругается на @Builder
 @NoArgsConstructor  // нужно для десериализатора
 // Заявка
 public class CardOrder {
