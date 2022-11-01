@@ -1,6 +1,7 @@
 package com.kirinalex.BankBackOffice.kafka;
 
 import com.kirinalex.BankBackOffice.models.CardOrder;
+import com.kirinalex.BankBackOffice.services.CardOrderService;
 import lombok.AllArgsConstructor;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Service;
@@ -10,8 +11,11 @@ import org.springframework.stereotype.Service;
 public class KafkaConsumer {
 // TODO реализовать Consumer отдельным проектом или этот проект сделать мультимодульным?
 
+    private final CardOrderService cardOrderService;
+
     @KafkaListener(topics = "topic1", groupId = "group1") // TODO хардкодом так topic1 и group1 или где хранить?
     public void consume(CardOrder cardOrder) {
+        cardOrderService.save(cardOrder);
         System.out.println("consumer get: " + cardOrder);
     }
 }
