@@ -13,7 +13,7 @@ public class KafkaConsumer {
 
     private final CardOrderService cardOrderService;
 
-    @KafkaListener(topics = "backoffice.cardorder", groupId = "group1") // TODO хардкодом так backoffice.cardorder и group1 или где хранить?
+    @KafkaListener(topics = "backoffice.cardorder", groupId = "backoffice") // TODO хардкодом так backoffice.cardorder и group1 или где хранить?
     public void consume(CardOrder cardOrder) {
         cardOrderService.save(cardOrder);
         System.out.println("consumer get: " + cardOrder);
