@@ -20,8 +20,18 @@ public class CardOrderService {
         cardOrderRepository.save(cardOrder);
     }
 
+    // TODO удалить этот метод? реально он нужен?
+    @Transactional(readOnly = true)
+    public CardOrder findById(int id) {
+        // TODO или findOne?
+        // TODO верно так получать значение?
+        // TODO как проверять на наличие?
+        // TODO нормально ли что тут возвращается и агент весь а не только его id? может быть изменить fetch = FetchType.. или типа того?
+        return cardOrderRepository.findById(id).get();
+    }
+
     // TODO возвращать неуспех если сервис не выдал результат?
-    // TODO переименовать?
+    // TODO переименовать
     public void create(CardOrder cardOrder){
         kafkaProducer.sendMessage(cardOrder);
     }

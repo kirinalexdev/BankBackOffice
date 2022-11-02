@@ -14,11 +14,16 @@ public class CardOrderController {
 
     @PostMapping("/create")
     // TODO добавить другие параметры к @RequestParam?
-    // TODO может быть правильнее использовать @RequestBody?
     // TODO добавить @Valid, BindingResult и прочее
     public void create(@RequestBody CardOrder cardOrder){
         cardOrderService.create(cardOrder);
         System.out.println(cardOrder);
+        // TODO возвращать тут ок неок?
+    }
+
+    @GetMapping("/findbyid")
+    public CardOrder get(@RequestParam int id){
+        return cardOrderService.findById(id);
         // TODO возвращать тут ок неок?
     }
 
