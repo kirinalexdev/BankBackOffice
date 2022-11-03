@@ -27,8 +27,6 @@ public class Employee {
     @Column(name = "last_name")
     private String lastName;
 
-    //!!! как это реализовать. с учтом того, что не все сотрудники являются агентами
-    //*@Cascade(org.hibernate.annotations.CascadeType.ALL) // TODO что тут?
-    //@OneToMany(mappedBy = "agent", cascade = CascadeType.)                      // TODO или использовать свойство cascade = CascadeType.ALL у @OneToMany?
-    //private List<CardOrder> cardOrders;                 // TODO см orphanRemoval = true
+    @OneToMany(mappedBy = "contact", cascade = CascadeType.ALL) // TODO orphanRemoval = true ?
+    private List<Contact> contacts;
 }
