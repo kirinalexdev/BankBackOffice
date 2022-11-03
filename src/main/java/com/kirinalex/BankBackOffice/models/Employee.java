@@ -27,6 +27,6 @@ public class Employee {
     @Column(name = "last_name")
     private String lastName;
 
-    @OneToMany(mappedBy = "contact", cascade = CascadeType.ALL) // TODO orphanRemoval = true ?
+    @OneToMany(mappedBy = "employee", cascade = CascadeType.ALL) // TODO orphanRemoval = true ?
     private List<Contact> contacts;
 }
