@@ -1,5 +1,7 @@
 package com.kirinalex.BankBackOffice.models;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import lombok.*;
 
 import javax.persistence.*;
@@ -12,6 +14,7 @@ import javax.persistence.*;
 @ToString
 @AllArgsConstructor // нужно, иначе ругается на @Builder
 @NoArgsConstructor
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class Contact {
 // TODO сделать тип контакта телефон, email. Сделать перечислением?
 

@@ -1,5 +1,9 @@
 package com.kirinalex.BankBackOffice.models;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIdentityReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import lombok.*;
 
 import javax.persistence.*;
@@ -13,6 +17,7 @@ import java.util.Date;
 @ToString
 @AllArgsConstructor // нужно, иначе ругается на @Builder
 @NoArgsConstructor  // нужно для десериализатора
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 // Заявка
 public class CardOrder {
 

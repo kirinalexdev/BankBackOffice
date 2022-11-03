@@ -13,20 +13,14 @@ public class CardOrderController {
     private final CardOrderService cardOrderService;
 
     @PostMapping("/create")
-    // TODO добавить другие параметры к @RequestParam?
-    // TODO добавить @Valid, BindingResult и прочее
     public void create(@RequestBody CardOrder cardOrder){
         cardOrderService.create(cardOrder);
         System.out.println(cardOrder);
-        // TODO возвращать тут ок неок?
     }
 
     @GetMapping("/findbyid")
     public CardOrder get(@RequestParam int id){
         return cardOrderService.findById(id);
-        // TODO возвращать тут ок неок?
     }
-
-    // TODO сделать все действия с заказом: обновление, удаление, получение,..
 
 }

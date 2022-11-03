@@ -1,5 +1,9 @@
 package com.kirinalex.BankBackOffice.models;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIdentityReference;
+import com.fasterxml.jackson.annotation.JsonValue;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import lombok.*;
 import org.hibernate.annotations.Cascade;
 
@@ -14,6 +18,7 @@ import java.util.List;
 @ToString
 @AllArgsConstructor // нужно, иначе ругается на @Builder
 @NoArgsConstructor
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id") // TODO решает ошибку бесконечной рекурсии при сериализации, но может как по другому сделать чтобы сериализовался только id дочернего объекта а не весь
 public class Employee {
 
     @Id
