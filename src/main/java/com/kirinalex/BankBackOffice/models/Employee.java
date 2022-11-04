@@ -18,7 +18,7 @@ import java.util.List;
 @ToString
 @AllArgsConstructor // нужно, иначе ругается на @Builder
 @NoArgsConstructor
-@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id") // TODO решает ошибку бесконечной рекурсии при сериализации, но может как по другому сделать чтобы сериализовался только id дочернего объекта а не весь
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id") // TODO это решает ошибку бесконечной рекурсии при сериализации, но может как по другому сделать чтобы сериализовался только id дочернего объекта а не весь
 public class Employee {
 
     @Id

@@ -7,6 +7,9 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Date;
+import java.util.List;
+
 @Service
 @AllArgsConstructor
 public class CardOrderService {
@@ -36,4 +39,7 @@ public class CardOrderService {
         kafkaProducer.sendMessage(cardOrder);
     }
 
+    public List<CardOrder> findByCreatedOnBetween(Date fromDate, Date toDate) {
+        return cardOrderRepository.findByCreatedOnBetween(fromDate, toDate);
+    }
 }
