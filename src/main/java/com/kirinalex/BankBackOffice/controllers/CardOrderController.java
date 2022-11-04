@@ -40,5 +40,11 @@ public class CardOrderController {
        return cardOrderService.topAgentsByOrdersCount(fromDate, toDate);
     }
 
+    @GetMapping("/monthlyTotals") // TODO можно ли, нужно ли тут использовать camelcase?
+    public List<Map<String, Object>> monthlyTotals(@RequestParam Date fromDate,
+                                                            @RequestParam Date toDate){
+       return cardOrderService.monthlyTotals(fromDate, toDate);
+    }
+
 
 }

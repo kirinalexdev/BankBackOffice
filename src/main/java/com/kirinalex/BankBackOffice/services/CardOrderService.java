@@ -47,4 +47,9 @@ public class CardOrderService {
         return cardOrderRepository.topAgentsByOrdersCount(fromDate, toDate);
     }
 
+    public List<Map<String, Object>> monthlyTotals(Date fromDate, Date toDate) {
+        return cardOrderRepository.monthlyTotals(fromDate, toDate);
+    }
+
+
 }
