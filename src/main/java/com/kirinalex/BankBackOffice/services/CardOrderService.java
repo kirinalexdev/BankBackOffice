@@ -9,13 +9,13 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 @Service
 @AllArgsConstructor
 public class CardOrderService {
 
     private KafkaProducer kafkaProducer;
-
     private final CardOrderRepository cardOrderRepository;
 
     @Transactional
@@ -42,4 +42,9 @@ public class CardOrderService {
     public List<CardOrder> findByCreatedOnBetween(Date fromDate, Date toDate) {
         return cardOrderRepository.findByCreatedOnBetween(fromDate, toDate);
     }
+
+    public List<Map<String, Object>> topAgentsByOrdersCount(Date fromDate, Date toDate) {
+        return cardOrderRepository.topAgentsByOrdersCount(fromDate, toDate);
+    }
+
 }

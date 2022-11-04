@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/cardorder")
@@ -32,4 +33,12 @@ public class CardOrderController {
                                                   @RequestParam Date toDate){
        return cardOrderService.findByCreatedOnBetween(fromDate, toDate);
     }
+
+    @GetMapping("/topAgentsByOrdersCount") // TODO можно ли, нужно ли тут использовать camelcase?
+    public List<Map<String, Object>> topAgentsByOrdersCount(@RequestParam Date fromDate,
+                                                            @RequestParam Date toDate){
+       return cardOrderService.topAgentsByOrdersCount(fromDate, toDate);
+    }
+
+
 }
