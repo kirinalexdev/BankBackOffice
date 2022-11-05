@@ -1,13 +1,19 @@
 package com.kirinalex.BankBackOffice.services;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.kirinalex.BankBackOffice.kafka.KafkaProducer;
 import com.kirinalex.BankBackOffice.models.CardOrder;
 import com.kirinalex.BankBackOffice.repositories.CardOrderRepository;
+import com.kirinalex.BankBackOffice.utils.Currency;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.client.RestTemplate;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -47,8 +53,9 @@ public class CardOrderService {
         return cardOrderRepository.topAgentsByOrdersCount(fromDate, toDate);
     }
 
-    public List<Map<String, Object>> monthlyTotals(Date fromDate, Date toDate) {
-        return cardOrderRepository.monthlyTotals(fromDate, toDate);
+    public List<Map<String, Object>> monthlyTotals(Date fromDate, Date toDate, String currency) {
+        double currencyRate = Currency.currencyRate(currency);
+        return cardOrderRepository.monthlyTotals(fromDate, toDate, currencyRate);
     }
 
 
