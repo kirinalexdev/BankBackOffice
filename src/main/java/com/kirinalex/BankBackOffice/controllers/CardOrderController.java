@@ -3,10 +3,16 @@ package com.kirinalex.BankBackOffice.controllers;
 import com.kirinalex.BankBackOffice.utils.Currency;
 import com.kirinalex.BankBackOffice.models.CardOrder;
 import com.kirinalex.BankBackOffice.services.CardOrderService;
+import com.kirinalex.BankBackOffice.utils.CurrencyRateException;
 import lombok.AllArgsConstructor;
+import lombok.SneakyThrows;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.sql.Timestamp;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -44,13 +50,21 @@ public class CardOrderController {
     @GetMapping("/monthlyTotals") // TODO можно ли, нужно ли тут использовать camelcase?
     public List<Map<String, Object>> monthlyTotals(@RequestParam Date fromDate,
                                                     @RequestParam Date toDate,
-                                                    @RequestParam String currency){
-       return cardOrderService.monthlyTotals(fromDate, toDate, currency);
+                                                    @RequestParam String currency) throws CurrencyRateException {
+        return cardOrderService.monthlyTotals(fromDate, toDate, currency);
     }
 
-    @GetMapping("/currencyRate") // TODO можно ли, нужно ли тут использовать camelcase?
-    public double currencyRate(@RequestParam String currency){
-       return Currency.currencyRate(currency);
-    }
+//    @GetMapping("/currencyRate") // TODO можно ли, нужно ли тут использовать camelcase?
+//    public double currencyRate(@RequestParam String currency){
+//       return Currency.currencyRate(currency);
+//    }
 
+    @ExceptionHandler
+    public ResponseEntity<Map<String, Object>> handleException(CurrencyRateException ex) {
+        Map<String, Object> resultStruct = new HashMap<>(); // TODO сделать общий класс или найти существующий с такими полями и от него наследовать все ошибки
+        resultStruct.put("error", ex.getMessage());
+        resultStruct.put("timestamp", new Timestamp(System.currentTimeMillis()));
+
+        return new ResponseEntity<>(resultStruct, HttpStatus.valueOf(ex.getStatusCode()));
+    }
 }

@@ -7,6 +7,7 @@ import com.kirinalex.BankBackOffice.kafka.KafkaProducer;
 import com.kirinalex.BankBackOffice.models.CardOrder;
 import com.kirinalex.BankBackOffice.repositories.CardOrderRepository;
 import com.kirinalex.BankBackOffice.utils.Currency;
+import com.kirinalex.BankBackOffice.utils.CurrencyRateException;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -53,7 +54,7 @@ public class CardOrderService {
         return cardOrderRepository.topAgentsByOrdersCount(fromDate, toDate);
     }
 
-    public List<Map<String, Object>> monthlyTotals(Date fromDate, Date toDate, String currency) {
+    public List<Map<String, Object>> monthlyTotals(Date fromDate, Date toDate, String currency) throws CurrencyRateException {
         double currencyRate = Currency.currencyRate(currency);
         return cardOrderRepository.monthlyTotals(fromDate, toDate, currencyRate);
     }
