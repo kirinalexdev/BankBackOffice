@@ -52,7 +52,7 @@ public interface CardOrderRepository extends JpaRepository<CardOrder, Integer> {
     SELECT
         date_trunc('month', c.created_on) month_begin,
         COUNT(c.id) orders_count,
-        SUM(c.credit_limit) / :currencyRate credit_limit_sum
+        CAST(SUM(c.credit_limit) / :currencyRate AS NUMERIC(15,2)) credit_limit_sum
     FROM
         card_order c
     WHERE

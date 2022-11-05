@@ -35,8 +35,8 @@ public class CardOrder {
     private String cardType;
 
     @Column(name = "credit_limit")
-    private int creditLimit; // TODO на какой тип заменить, чтобы хранить и копейки?
-
+    private int creditLimit; // TODO на какой тип заменить, чтобы в постгре был тип numeric
+                             // это нужно в частности, чтобы в запросе при делении на это значение не было округления до рублей
     // TODO добавить поле Валюта
 
     @Column(name = "created_on")
