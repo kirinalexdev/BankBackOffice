@@ -13,9 +13,6 @@ import java.util.Map;
 @Repository
 public interface CardOrderRepository extends JpaRepository<CardOrder, Integer> {
 
-    !!! что то на этом сделать jooq
-    гуглить вложенные запросы
-
     List<CardOrder> findByCreatedOnBetween(Date fromDate, Date toDate);
 
     @Query(nativeQuery = true,
@@ -33,15 +30,15 @@ public interface CardOrderRepository extends JpaRepository<CardOrder, Integer> {
             c.agent_id
         FROM 
             card_order c
-        where 
-            c.created_on between :fromDate and :toDate
+        WHERE 
+            c.created_on BETWEEN :fromDate AND :toDate
         GROUP BY 
             agent_id
         ORDER BY 
             orders_count DESC
         LIMIT 10) counts
     LEFT JOIN employee 
-        on counts.agent_id = employee.id""")
+        ON counts.agent_id = employee.id""")
     List<Map<String, Object>> topAgentsByOrdersCount(@Param("fromDate") Date fromDate,
                                                      @Param("toDate") Date toDate);
 
@@ -53,8 +50,8 @@ public interface CardOrderRepository extends JpaRepository<CardOrder, Integer> {
         SUM(c.credit_limit) credit_limit_sum
     FROM
         card_order c
-    where
-        c.created_on between :fromDate and :toDate
+    WHERE
+        c.created_on BETWEEN :fromDate AND :toDate
     GROUP BY
          month_begin
     ORDER BY
