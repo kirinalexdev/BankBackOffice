@@ -30,10 +30,6 @@ public class CardOrder {
     @JoinColumn(name = "agent_id", referencedColumnName = "id")
     private Employee agent;
 
-    // TODO удалить? Сделать так, что работаем только кредитными картами?
-    @Column(name = "card_type")
-    private String cardType;
-
     @Column(name = "credit_limit")
     private int creditLimit; // TODO на какой тип заменить, чтобы в постгре был тип numeric
                              // это нужно в частности, чтобы в запросе при делении на это значение не было округления до рублей
