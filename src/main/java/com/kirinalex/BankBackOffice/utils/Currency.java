@@ -23,8 +23,11 @@ public class Currency {
         params.put("APIKEY", APIKEY);
 
         RestTemplate restTemplate = new RestTemplate(); // TODO норм так создавать или внедрением завимисомти нужно?
-        var response = restTemplate.getForEntity(url, String.class, params);
-        var a = new ObjectMapper();
+        var response = restTemplate.getForEntity(url, String.class, params);// TODO завернуть в попытку и логировать детали вызова, или достаточная инфа будет в ExceptionsHandler?
+
+        if (response.getStatusCode() != HttpStatus.OK) {
+            throw new CurrencyRateException(prefixErrorMessage, response.getStatusCode());
+        }
 
         // TODO отладка
         // TODO логирвать ошибки
@@ -36,12 +39,9 @@ public class Currency {
         try {
             rootNode = mapper.readTree(response.getBody());
         } catch (JsonProcessingException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException(e); // TODO это чем будет обрабатываться?
         }
 
-        if (response.getStatusCode() != HttpStatus.OK) {
-            throw new CurrencyRateException(prefixErrorMessage, response.getStatusCode());
-        }
 
         //int r = 1/0;
 
@@ -52,7 +52,7 @@ public class Currency {
             throw new CurrencyRateException(message, statusCode);
         }
 
-        return rootNode.get("data").get(pair).asDouble();  // TODO завернуть в попытку?
+        return rootNode.get("data").get(pair).asDouble(); // TODO завернуть в попытку и логировать детали парсинга?
     }
 
 }

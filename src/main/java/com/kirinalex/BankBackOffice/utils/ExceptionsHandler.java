@@ -47,7 +47,7 @@ public class ExceptionsHandler extends ResponseEntityExceptionHandler {
 @Setter
 @AllArgsConstructor
 class ErrorResponse {
-    private Timestamp timestamp; // TODO верный тип?
+    private Timestamp timestamp;
     private int status;
     private String error;
     private String message;
