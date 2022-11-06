@@ -6,8 +6,12 @@ import com.fasterxml.jackson.annotation.JsonValue;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import lombok.*;
 import org.hibernate.annotations.Cascade;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+import java.util.Date;
 import java.util.List;
 
 @Entity
@@ -27,11 +31,18 @@ public class Employee {
     private int id;
 
     @Column(name = "first_name")
+    @Size(min = 2, max = 100, message = "Имя должно быть длиной от 2 до 100 символов")
     private String firstName;
 
     @Column(name = "last_name")
+    @Size(min = 2, max = 100, message = "Фамилия должна быть длиной от 2 до 100 символов")
     private String lastName;
 
     @OneToMany(mappedBy = "employee", cascade = CascadeType.ALL) // TODO orphanRemoval = true ?
     private List<Contact> contacts;
+
+    @Column(name = "birthday")
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    @NotNull(message = "Дата должна быть указана")
+    private Date birthday;
 }

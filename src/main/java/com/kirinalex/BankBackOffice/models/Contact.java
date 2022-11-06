@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import lombok.*;
 
 import javax.persistence.*;
+import javax.validation.constraints.Size;
 
 @Entity
 @Table(name = "contact")
@@ -12,7 +13,7 @@ import javax.persistence.*;
 @Setter
 @Builder
 @ToString
-@AllArgsConstructor // нужно, иначе ругается на @Builder
+@AllArgsConstructor // нужно, иначе ругается на @Builder  TODO написать какая именно ошибка
 @NoArgsConstructor
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class Contact {
@@ -21,9 +22,10 @@ public class Contact {
     @Id
     @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Integer id;
 
     @Column(name = "value")
+    @Size(min = 5, max = 100, message = "Значение контакта должно быть длиной от 5 до 100 символов")
     private String value;
 
     @ManyToOne
