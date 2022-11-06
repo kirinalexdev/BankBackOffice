@@ -1,25 +1,19 @@
 package com.kirinalex.BankBackOffice.controllers;
 
-import com.kirinalex.BankBackOffice.utils.Currency;
 import com.kirinalex.BankBackOffice.models.CardOrder;
 import com.kirinalex.BankBackOffice.services.CardOrderService;
 import com.kirinalex.BankBackOffice.utils.CurrencyRateException;
 import lombok.AllArgsConstructor;
-import lombok.SneakyThrows;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.sql.Timestamp;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 @RestController
 @RequestMapping("/cardorder")
 @AllArgsConstructor
-public class CardOrderController {
+public class CardOrderController  {
 
     private final CardOrderService cardOrderService;
 
@@ -51,6 +45,7 @@ public class CardOrderController {
     public List<Map<String, Object>> monthlyTotals(@RequestParam Date fromDate,
                                                     @RequestParam Date toDate,
                                                     @RequestParam String currency) throws CurrencyRateException {
+        //System.out.println(this.);
         return cardOrderService.monthlyTotals(fromDate, toDate, currency);
     }
 
@@ -59,12 +54,25 @@ public class CardOrderController {
 //       return Currency.currencyRate(currency);
 //    }
 
-    @ExceptionHandler
-    public ResponseEntity<Map<String, Object>> handleException(CurrencyRateException ex) {
-        Map<String, Object> resultStruct = new HashMap<>(); // TODO сделать общий класс или найти существующий с такими полями и от него наследовать все ошибки
-        resultStruct.put("error", ex.getMessage());
-        resultStruct.put("timestamp", new Timestamp(System.currentTimeMillis()));
+   // см https://sysout.ru/spring-boot-rest-api-obrabotka-isklyuchenij-chast-1/
 
-        return new ResponseEntity<>(resultStruct, HttpStatus.valueOf(ex.getStatusCode()));
-    }
+    // TODO м.б. сделать через @ControllerAdvice
+    //   про него много где пишут, например
+    //   https://sysout.ru/spring-boot-rest-api-obrabotka-isklyuchenij/
+    //   https://habr.com/ru/post/528116/
+
+    // TODO предварительно проверить, есть ли
+
+    // TODO Самому составить эту структуру или она должна сама составляться выбрасыванием исключения?
+    //      Это спринг ее состаляет?
+    //        {
+    //        "timestamp": "2022-11-05T12:26:45.329+00:00",
+    //            "status": 500,
+    //            "error": "Internal Server Error",
+    //            "path": "/cardorder/monthlyTotals"
+    //    }
+
+    // TODO Сделать это?
+    // https://sysout.ru/spring-boot-rest-api-obrabotka-isklyuchenij-chast-1/
+    // server.error.include-message=always
 }

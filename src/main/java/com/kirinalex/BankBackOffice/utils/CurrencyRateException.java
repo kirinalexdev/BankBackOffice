@@ -1,13 +1,14 @@
 package com.kirinalex.BankBackOffice.utils;
 
 import lombok.Getter;
+import org.springframework.http.HttpStatus;
 
 @Getter
 public class CurrencyRateException extends Exception{
-    int statusCode;
+    HttpStatus status;
 
-    public CurrencyRateException(String message, int statusCode) {
+    public CurrencyRateException(String message, HttpStatus status) {
         super(message);
-        this.statusCode = statusCode;
+        this.status = status;
     }
 }
