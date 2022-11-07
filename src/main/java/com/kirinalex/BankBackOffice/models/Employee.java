@@ -22,7 +22,7 @@ import java.util.List;
 @ToString
 @AllArgsConstructor // нужно, иначе ругается на @Builder
 @NoArgsConstructor
-@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id") // TODO это решает ошибку бесконечной рекурсии при сериализации, но может как по другому сделать чтобы сериализовался только id дочернего объекта а не весь
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class Employee {
 
     @Id
@@ -30,18 +30,18 @@ public class Employee {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    @Column(name = "first_name")
+    @Column(name = "first_name", length = 100, nullable = false)
     @Size(min = 2, max = 100, message = "Имя должно быть длиной от 2 до 100 символов")
     private String firstName;
 
-    @Column(name = "last_name")
+    @Column(name = "last_name", length = 100, nullable = false)
     @Size(min = 2, max = 100, message = "Фамилия должна быть длиной от 2 до 100 символов")
     private String lastName;
 
-    @OneToMany(mappedBy = "employee", cascade = CascadeType.ALL) // TODO orphanRemoval = true ?
+    @OneToMany(mappedBy = "employee", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Contact> contacts;
 
-    @Column(name = "birthday")
+    @Column(name = "birthday", nullable = false)
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     @NotNull(message = "Дата должна быть указана")
     private Date birthday;

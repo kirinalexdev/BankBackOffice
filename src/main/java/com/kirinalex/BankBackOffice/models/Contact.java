@@ -17,14 +17,14 @@ import javax.validation.constraints.Size;
 @NoArgsConstructor
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class Contact {
-// TODO сделать тип контакта телефон, email. Сделать перечислением?
+    // TODO сделать тип контакта телефон, email. Сделать перечислением?
 
     @Id
     @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Column(name = "value")
+    @Column(name = "value", length = 100, nullable = false)
     @Size(min = 5, max = 100, message = "Значение контакта должно быть длиной от 5 до 100 символов")
     private String value;
 
