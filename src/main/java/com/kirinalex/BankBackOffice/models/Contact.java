@@ -2,6 +2,7 @@ package com.kirinalex.BankBackOffice.models;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import com.kirinalex.BankBackOffice.enums.ContactType;
 import lombok.*;
 
 import javax.persistence.*;
@@ -17,7 +18,6 @@ import javax.validation.constraints.Size;
 @NoArgsConstructor
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class Contact {
-    // TODO сделать тип контакта телефон, email. Сделать перечислением?
 
     @Id
     @Column(name = "id")
@@ -31,5 +31,9 @@ public class Contact {
     @ManyToOne
     @JoinColumn(name = "employee_id", referencedColumnName = "id")
     private Employee employee;
+
+    @Column(name = "type", length = 10, nullable = false)
+    @Enumerated(EnumType.STRING)
+    private ContactType type;
 
 }
