@@ -16,7 +16,7 @@ import java.sql.Timestamp;
 public class ExceptionsHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(CurrencyRateException.class)
-    public ResponseEntity<ErrorResponse> handleException(HttpServletRequest httpRequest, CurrencyRateException ex) {
+    public ResponseEntity<ErrorResponse> currencyRateExceptionHandler(HttpServletRequest httpRequest, CurrencyRateException ex) {
         HttpStatus status = ex.getStatus();
 
         var error = new ErrorResponse(new Timestamp(System.currentTimeMillis()),
@@ -29,7 +29,7 @@ public class ExceptionsHandler extends ResponseEntityExceptionHandler {
     }
 
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<ErrorResponse> handleOtherException(HttpServletRequest httpRequest, Exception ex) {
+    public ResponseEntity<ErrorResponse> defaultExceptionHandler(HttpServletRequest httpRequest, Exception ex) {
         // TODO ?здесь логировать всё, а в други обработчиках ничего, т.к. мы уже там должны были залогировать на нижних уровнях?
         HttpStatus status = HttpStatus.INTERNAL_SERVER_ERROR;
 
