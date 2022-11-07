@@ -1,8 +1,9 @@
-package com.kirinalex.BankBackOffice.utils;
+package com.kirinalex.BankBackOffice.finance;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.kirinalex.BankBackOffice.utils.CurrencyRateException;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.client.RestTemplate;
 
@@ -35,7 +36,7 @@ public class Currency {
         System.out.println(response.getStatusCode());
 
         ObjectMapper mapper = new ObjectMapper(); // TODO норм так создавать или внедрением завимисомти нужно?
-        JsonNode rootNode = null;
+        JsonNode rootNode;
         try {
             rootNode = mapper.readTree(response.getBody());
         } catch (JsonProcessingException e) {
