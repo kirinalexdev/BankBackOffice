@@ -1,20 +1,15 @@
 package com.kirinalex.BankBackOffice.services;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.kirinalex.BankBackOffice.kafka.KafkaProducer;
 import com.kirinalex.BankBackOffice.models.CardOrder;
 import com.kirinalex.BankBackOffice.repositories.CardOrderRepository;
-import com.kirinalex.BankBackOffice.utils.Currency;
+import com.kirinalex.BankBackOffice.finance.Currency;
 import com.kirinalex.BankBackOffice.utils.CurrencyRateException;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.client.RestTemplate;
 
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 

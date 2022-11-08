@@ -31,18 +31,20 @@ public class Employee {
     private int id;
 
     @Column(name = "first_name", length = 100, nullable = false)
-    @Size(min = 2, max = 100, message = "Имя должно быть длиной от 2 до 100 символов")
+    @Size(min = 2, max = 100)
+    @NotNull
     private String firstName;
 
     @Column(name = "last_name", length = 100, nullable = false)
-    @Size(min = 2, max = 100, message = "Фамилия должна быть длиной от 2 до 100 символов")
+    @Size(min = 2, max = 100)
+    @NotNull
     private String lastName;
 
-    @OneToMany(mappedBy = "employee", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "employee", cascade = CascadeType.ALL, orphanRemoval = true) // TODO nullable = false?
     private List<Contact> contacts;
 
     @Column(name = "birthday", nullable = false)
     @DateTimeFormat(pattern = "yyyy-MM-dd")
-    @NotNull(message = "Дата должна быть указана")
+    @NotNull
     private Date birthday;
 }

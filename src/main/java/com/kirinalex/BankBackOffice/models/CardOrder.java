@@ -8,6 +8,7 @@ import lombok.*;
 
 import javax.persistence.*;
 import javax.validation.constraints.Min;
+import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.math.BigDecimal;
@@ -28,31 +29,28 @@ public class CardOrder {
     @Id
     @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY) // TODO м.б. есть более подходящее значение? Немчинский рекомендует ид получать в БД
-    private int id;                                     // в других моделях тоже см
+    private int id;                                     //      в других моделях тоже см
 
-    // TODO тут нужно @NotNull и/или nullable=false? см и в других моделях
     @ManyToOne
-    @JoinColumn(name = "agent_id", referencedColumnName = "id")
+    @JoinColumn(name = "agent_id", referencedColumnName = "id", nullable=false)
+    @NotNull
     private Employee agent;
 
+    // TODO как валидировать, что передан несуществующий ключ:
+    //      ОШИБКА: INSERT или UPDATE в таблице "card_order" нарушает ограничение внешнего ключа "fkcs5aefchaqji91dkqvnb9wgak"
+    //      Подробности: Ключ (agent_id)=(10) отсутствует в таблице "employee".
+
     @Column(name = "credit_limit", precision = 15, scale = 2, nullable = false)
-    @NotNull(message = "Кредитный лимит должно быть указан")
     @Min(1)
+    @NotNull
     private BigDecimal creditLimit;
 
-    @Column(name = "created_on")
+    @Column(name = "created_on", nullable = false)
     @Temporal(TemporalType.TIMESTAMP)
     private Date createdOn = new Date();
 
-    @Column(name = "сlient", length = 100)
-    @Size(min = 2, max = 100, message = "Поле Клиент должно быть длиной от 2 до 100 символов")
-    @NotNull(message = "Клиент должен быть указан") // TODO это надо при наличии @Size? см и в других моделях
+    @Column(name = "сlient", length = 100, nullable = false)
+    @Size(min = 2, max = 100)
+    @NotNull
     private String сlient;
-
-    // TODO нужны ли message в проверках, или и так сообщения понятные выдаваться будут?
-
-    // TODO если есть @NotNull то нужно ли nullable=false?
-    //      или наоборот если есть nullable=false то нужно ли @NotNull? nullable=falseг нужно для прямых вставок минуя модель?
-
-    // TODO @NotEmpty нужно ли если задано @Size?
 }
