@@ -18,17 +18,12 @@ public class EmployeeController {
     // TODO добавить @Valid, BindingResult и прочее см и другие контроллеры
     public void create(@RequestBody Employee employee){
         employeeService.save(employee);
-        //System.out.println(employee);
-        // TODO возвращать тут ок неок?
     }
 
     // TODO надо ли это?
-    @GetMapping("/findbyid")
+    @GetMapping("/find-by-id")
     public Employee get(@RequestParam int id){
         return employeeService.findById(id);
     }
-
-    // TODO сделать все действия: обновление, удаление, получение,..
-    // см и другие контроллеры
 
 }

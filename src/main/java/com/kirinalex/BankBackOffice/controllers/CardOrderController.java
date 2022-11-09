@@ -17,7 +17,7 @@ import java.util.Map;
 import static com.kirinalex.BankBackOffice.utils.ErrorsUtil.generateErrorMessage;
 
 @RestController
-@RequestMapping("/cardorder")
+@RequestMapping("/card-order")
 @AllArgsConstructor
 public class CardOrderController  {
 
@@ -39,29 +39,42 @@ public class CardOrderController  {
         System.out.println(cardOrder); // TODO отладка
     }
 
-    @GetMapping("/findbyid")
+    // TODO в чем отличие создания от редактирования?
+//    @PostMapping("/edit")
+//    public void edit(@RequestBody @Valid CardOrder cardOrder,
+//                       BindingResult bindingResult) throws BadRequestException {
+//
+//        if (bindingResult.hasErrors()) {
+//            String s = generateErrorMessage(bindingResult.getFieldErrors());
+//            throw new BadRequestException(s);
+//        }
+//
+//        cardOrderService.create(cardOrder);
+//        System.out.println(cardOrder); // TODO отладка
+//    }
+
+    @GetMapping("/find-by-id")
     public CardOrder findbyid(@RequestParam int id){
         return cardOrderService.findById(id);
     }
 
     // TODO сделать чтобы возвращал текстовую плоскую инфу, без id, без вложенностей?
-    @GetMapping("/findbycreatedon") // TODO можно ли, нужно ли тут использовать camelcase?
+    @GetMapping("/find-by-created-on")
     public List<CardOrder> findByCreatedOnBetween(@RequestParam Date fromDate,
                                                   @RequestParam Date toDate){
        return cardOrderService.findByCreatedOnBetween(fromDate, toDate);
     }
 
-    @GetMapping("/topAgentsByOrdersCount") // TODO можно ли, нужно ли тут использовать camelcase?
+    @GetMapping("/top-agents-by-orders-count")
     public List<Map<String, Object>> topAgentsByOrdersCount(@RequestParam Date fromDate,
                                                             @RequestParam Date toDate){
        return cardOrderService.topAgentsByOrdersCount(fromDate, toDate);
     }
 
-    @GetMapping("/monthlyTotals") // TODO можно ли, нужно ли тут использовать camelcase?
+    @GetMapping("/monthly-totals")
     public List<Map<String, Object>> monthlyTotals(@RequestParam Date fromDate,
                                                     @RequestParam Date toDate,
                                                     @RequestParam String currency) throws CurrencyRateException {
-        //System.out.println(this.);
         return cardOrderService.monthlyTotals(fromDate, toDate, currency);
     }
 
