@@ -43,10 +43,6 @@ public interface CardOrderRepository extends JpaRepository<CardOrder, Integer> {
     List<Map<String, Object>> topAgentsByOrdersCount(@Param("fromDate") Date fromDate,
                                                      @Param("toDate") Date toDate);
 
-    // TODO оставить в credit_limit_sum только 2 цифры после запятой?
-    // задал вопрос как это сделать
-    // https://ru.stackoverflow.com/questions/1464126/%d0%9a%d0%b0%d0%ba-%d0%b2-postgres-%d0%bf%d1%80%d0%b8%d0%b2%d0%b5%d1%81%d1%82%d0%b8-double-precision-%d0%b2-numeric15-2
-
     @Query(nativeQuery = true,
     value = """
     SELECT

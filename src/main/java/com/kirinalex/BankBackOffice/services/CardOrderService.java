@@ -15,6 +15,7 @@ import java.util.Map;
 
 @Service
 @AllArgsConstructor
+@Transactional(readOnly = true)
 public class CardOrderService {
 
     private KafkaProducer kafkaProducer;
@@ -25,21 +26,6 @@ public class CardOrderService {
         cardOrderRepository.save(cardOrder);
     }
 
-    // TODO удалить этот метод? реально он нужен?
-    @Transactional(readOnly = true)
-    public CardOrder findById(int id) {
-        // TODO или findOne?
-        // TODO верно так получать значение?
-        // TODO как проверять на наличие?
-        // TODO нормально ли что тут возвращается и агент весь а не только его id? может быть изменить fetch = FetchType.. или типа того?
-        return cardOrderRepository.findById(id).get();
-    }
-
-    @Transactional
-    public void delete(int id){
-        cardOrderRepository.deleteById(id);
-    }
-
     // TODO возвращать неуспех если сервис не выдал результат?
     // TODO переименовать
     public void create(CardOrder cardOrder){
@@ -47,8 +33,19 @@ public class CardOrderService {
         kafkaProducer.sendMessage(cardOrder);
     }
 
+    @Transactional
     public void update(CardOrder cardOrder) {
         kafkaProducer.sendMessage(cardOrder);
+    }
+
+    @Transactional
+    public void delete(int id){
+        cardOrderRepository.deleteById(id);
+    }
+
+    public CardOrder findById(int id) {
+        // TODO как проверять на наличие?
+        return cardOrderRepository.findById(id).get();
     }
 
     public List<CardOrder> findByCreatedOnBetween(Date fromDate, Date toDate) {
