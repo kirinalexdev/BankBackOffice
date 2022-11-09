@@ -6,9 +6,11 @@ import com.kirinalex.BankBackOffice.utils.BadRequestException;
 import com.kirinalex.BankBackOffice.utils.CurrencyRateException;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.util.Date;
 import java.util.List;
@@ -24,38 +26,27 @@ public class CardOrderController  {
     private final CardOrderService cardOrderService;
 
     @PostMapping
-    @ResponseStatus(HttpStatus.CREATED) // TODO может быть тут другой статус вернуть. ведь тут помещение в кафку, не создание
     public void create(@RequestBody @Valid CardOrder cardOrder,
                        BindingResult bindingResult) throws BadRequestException {
-    // TODO гуглить как избавиться от ошибки Unhandled exception, при отсутствии throws BadRequestException
-    //      ведь у меня есть @ControllerAdvice
 
-         // TODO проверять что id не пришел?
         if (bindingResult.hasErrors()) {
             String s = generateErrorMessage(bindingResult.getFieldErrors());
             throw new BadRequestException(s);
         }
 
         cardOrderService.create(cardOrder);
-        System.out.println(cardOrder); // TODO отладка
     }
 
     @PutMapping
     public void update(@RequestBody @Valid CardOrder cardOrder,
                        BindingResult bindingResult) throws BadRequestException {
-        // TODO проверять что id пришел?
+
         if (bindingResult.hasErrors()) {
             String s = generateErrorMessage(bindingResult.getFieldErrors());
             throw new BadRequestException(s);
         }
 
         cardOrderService.update(cardOrder);
-        System.out.println(cardOrder); // TODO отладка
-    }
-
-    @GetMapping("/find-by-id")
-    public CardOrder findbyid(@RequestParam int id){
-        return cardOrderService.findById(id);
     }
 
     @DeleteMapping
@@ -63,7 +54,11 @@ public class CardOrderController  {
         cardOrderService.delete(id);
     }
 
-    // TODO сделать чтобы возвращал текстовую плоскую инфу, без id, без вложенностей?
+    @GetMapping("/find-by-id")
+    public CardOrder findbyid(@RequestParam int id){
+        return cardOrderService.findById(id);
+    }
+
     @GetMapping("/find-by-created-on")
     public List<CardOrder> findByCreatedOnBetween(@RequestParam Date fromDate,
                                                   @RequestParam Date toDate){
@@ -82,6 +77,4 @@ public class CardOrderController  {
                                                     @RequestParam String currency) throws CurrencyRateException {
         return cardOrderService.monthlyTotals(fromDate, toDate, currency);
     }
-
-
 }
