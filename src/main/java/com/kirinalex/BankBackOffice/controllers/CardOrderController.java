@@ -23,7 +23,7 @@ public class CardOrderController  {
 
     private final CardOrderService cardOrderService;
 
-    @PostMapping("/create")
+    @PostMapping("/create") // TODO удалить /update?
     @ResponseStatus(HttpStatus.CREATED) // TODO может быть тут другой статус вернуть. ведь тут помещение в кафку, не создание
     public void create(@RequestBody @Valid CardOrder cardOrder,
                        BindingResult bindingResult) throws BadRequestException {
@@ -40,7 +40,7 @@ public class CardOrderController  {
         System.out.println(cardOrder); // TODO отладка
     }
 
-    @PutMapping("/update")
+    @PutMapping("/update") // TODO удалить /update?
     public void update(@RequestBody @Valid CardOrder cardOrder,
                        BindingResult bindingResult) throws BadRequestException {
         // TODO проверять что id пришел?
@@ -56,6 +56,11 @@ public class CardOrderController  {
     @GetMapping("/find-by-id")
     public CardOrder findbyid(@RequestParam int id){
         return cardOrderService.findById(id);
+    }
+
+    @DeleteMapping
+    public void delete(@RequestParam int id) {
+        cardOrderService.delete(id);
     }
 
     // TODO сделать чтобы возвращал текстовую плоскую инфу, без id, без вложенностей?

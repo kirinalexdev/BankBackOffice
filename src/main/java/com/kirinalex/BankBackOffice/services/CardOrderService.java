@@ -6,7 +6,6 @@ import com.kirinalex.BankBackOffice.repositories.CardOrderRepository;
 import com.kirinalex.BankBackOffice.finance.Currency;
 import com.kirinalex.BankBackOffice.utils.CurrencyRateException;
 import lombok.AllArgsConstructor;
-import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -34,6 +33,11 @@ public class CardOrderService {
         // TODO как проверять на наличие?
         // TODO нормально ли что тут возвращается и агент весь а не только его id? может быть изменить fetch = FetchType.. или типа того?
         return cardOrderRepository.findById(id).get();
+    }
+
+    @Transactional
+    public void delete(int id){
+        cardOrderRepository.deleteById(id);
     }
 
     // TODO возвращать неуспех если сервис не выдал результат?

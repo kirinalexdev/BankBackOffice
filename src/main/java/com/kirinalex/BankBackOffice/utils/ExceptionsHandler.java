@@ -16,6 +16,8 @@ import java.sql.Timestamp;
 @ControllerAdvice
 public class ExceptionsHandler extends ResponseEntityExceptionHandler {
 
+    // TODO перенести в defaultExceptionHandler и там устанавливать статус так как
+    //       это делается в ResponseEntityExceptionHandler
     @ExceptionHandler(BadRequestException.class)
     public ResponseEntity<ErrorResponse> badRequestExceptionHandler(HttpServletRequest httpRequest, BadRequestException ex) {
         HttpStatus status = HttpStatus.BAD_REQUEST;
