@@ -30,6 +30,7 @@ public class CardOrderController  {
     // TODO гуглить как избавиться от ошибки Unhandled exception, при отсутствии throws BadRequestException
     //      ведь у меня есть @ControllerAdvice
 
+         // TODO проверять что id не пришел?
         if (bindingResult.hasErrors()) {
             String s = generateErrorMessage(bindingResult.getFieldErrors());
             throw new BadRequestException(s);
@@ -39,19 +40,18 @@ public class CardOrderController  {
         System.out.println(cardOrder); // TODO отладка
     }
 
-    // TODO в чем отличие создания от редактирования?
-//    @PostMapping("/edit")
-//    public void edit(@RequestBody @Valid CardOrder cardOrder,
-//                       BindingResult bindingResult) throws BadRequestException {
-//
-//        if (bindingResult.hasErrors()) {
-//            String s = generateErrorMessage(bindingResult.getFieldErrors());
-//            throw new BadRequestException(s);
-//        }
-//
-//        cardOrderService.create(cardOrder);
-//        System.out.println(cardOrder); // TODO отладка
-//    }
+    @PutMapping("/update")
+    public void update(@RequestBody @Valid CardOrder cardOrder,
+                       BindingResult bindingResult) throws BadRequestException {
+        // TODO проверять что id пришел?
+        if (bindingResult.hasErrors()) {
+            String s = generateErrorMessage(bindingResult.getFieldErrors());
+            throw new BadRequestException(s);
+        }
+
+        cardOrderService.update(cardOrder);
+        System.out.println(cardOrder); // TODO отладка
+    }
 
     @GetMapping("/find-by-id")
     public CardOrder findbyid(@RequestParam int id){

@@ -6,6 +6,7 @@ import com.kirinalex.BankBackOffice.repositories.CardOrderRepository;
 import com.kirinalex.BankBackOffice.finance.Currency;
 import com.kirinalex.BankBackOffice.utils.CurrencyRateException;
 import lombok.AllArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -38,6 +39,11 @@ public class CardOrderService {
     // TODO возвращать неуспех если сервис не выдал результат?
     // TODO переименовать
     public void create(CardOrder cardOrder){
+        cardOrder.setCreatedOn(new Date());
+        kafkaProducer.sendMessage(cardOrder);
+    }
+
+    public void update(CardOrder cardOrder) {
         kafkaProducer.sendMessage(cardOrder);
     }
 
@@ -53,6 +59,7 @@ public class CardOrderService {
         double currencyRate = Currency.currencyRate(currency);
         return cardOrderRepository.monthlyTotals(fromDate, toDate, currencyRate);
     }
+
 
 
 }

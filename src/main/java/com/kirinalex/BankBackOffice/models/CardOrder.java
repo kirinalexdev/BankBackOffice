@@ -47,7 +47,7 @@ public class CardOrder {
 
     @Column(name = "created_on", nullable = false)
     @Temporal(TemporalType.TIMESTAMP)
-    private Date createdOn = new Date();
+    private Date createdOn;
 
     @Column(name = "сlient", length = 100, nullable = false)
     @Size(min = 2, max = 100)
