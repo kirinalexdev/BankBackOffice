@@ -8,10 +8,11 @@ import org.springframework.kafka.config.TopicBuilder;
 @Configuration
 public class KafkaTopicConfig {
 
-    // TODO добавить параметров кроме name: масштабируемость: partitions и т.п.
     @Bean
-    public NewTopic СardOrder(){
+    public NewTopic CardOrder(){
         return TopicBuilder.name("backoffice.cardorder")
+                .compact()
+                .partitions(3)
                 .build();
     }
 }
