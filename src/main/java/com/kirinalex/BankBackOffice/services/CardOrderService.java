@@ -12,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @Service
 @AllArgsConstructor
@@ -26,7 +27,6 @@ public class CardOrderService {
         cardOrderRepository.save(cardOrder);
     }
 
-    // TODO возвращать неуспех если сервис не выдал результат?
     // TODO переименовать
     public void create(CardOrder cardOrder){
         cardOrder.setCreatedOn(new Date());
@@ -43,9 +43,8 @@ public class CardOrderService {
         cardOrderRepository.deleteById(id);
     }
 
-    public CardOrder findById(int id) {
-        // TODO как проверять на наличие?
-        return cardOrderRepository.findById(id).get();
+    public Optional<CardOrder> findById(int id) {
+        return cardOrderRepository.findById(id);
     }
 
     public List<CardOrder> findByCreatedOnBetween(Date fromDate, Date toDate) {
@@ -60,7 +59,4 @@ public class CardOrderService {
         double currencyRate = Currency.currencyRate(currency);
         return cardOrderRepository.monthlyTotals(fromDate, toDate, currencyRate);
     }
-
-
-
 }

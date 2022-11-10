@@ -16,6 +16,8 @@ import java.sql.Timestamp;
 @ControllerAdvice
 public class ExceptionsHandler extends ResponseEntityExceptionHandler {
 
+    // TODO взамен этого рассмотреть res.setStatus(HttpServletResponse.SC_NOT_FOUND);
+    //      https://stackoverflow.com/questions/25422255/how-to-return-404-response-status-in-spring-boot-responsebody-method-return-t
     // TODO перенести в defaultExceptionHandler и там устанавливать статус так как
     //       это делается в ResponseEntityExceptionHandler
     @ExceptionHandler(BadRequestException.class)
