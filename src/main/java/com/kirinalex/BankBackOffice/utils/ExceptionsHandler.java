@@ -23,14 +23,14 @@ public class ExceptionsHandler extends ResponseEntityExceptionHandler {
     @ExceptionHandler(BadRequestException.class)
     public ResponseEntity<ErrorResponse> badRequestExceptionHandler(HttpServletRequest httpRequest, BadRequestException ex) {
         HttpStatus status = HttpStatus.BAD_REQUEST;
-        var error = new ErrorResponse(status, ex, httpRequest);
+        var error = new ErrorResponse(status, ex.getMessage(), httpRequest);
         return new ResponseEntity<>(error, status);
     }
 
     @ExceptionHandler(CurrencyRateException.class)
     public ResponseEntity<ErrorResponse> currencyRateExceptionHandler(HttpServletRequest httpRequest, CurrencyRateException ex) {
         HttpStatus status = ex.getStatus();
-        var error = new ErrorResponse(status, ex, httpRequest);
+        var error = new ErrorResponse(status, ex.getMessage(), httpRequest);
         return new ResponseEntity<>(error, status);
     }
 
@@ -38,27 +38,9 @@ public class ExceptionsHandler extends ResponseEntityExceptionHandler {
     public ResponseEntity<ErrorResponse> defaultExceptionHandler(HttpServletRequest httpRequest, Exception ex) {
         // TODO ?здесь логировать всё, а в други обработчиках ничего, т.к. мы уже там должны были залогировать на нижних уровнях?
         HttpStatus status = HttpStatus.INTERNAL_SERVER_ERROR;
-        var error = new ErrorResponse(status, ex, httpRequest);
+        var error = new ErrorResponse(status, ex.getMessage(), httpRequest);
         return new ResponseEntity<>(error, status);
         //ex.getMessage(), // TODO это сообщение логировать, а возврашать какое то типа "ошибка приложения"
     }
 }
 
-@Getter
-@Setter
-@AllArgsConstructor
-class ErrorResponse {
-    private Timestamp timestamp;
-    private int status;
-    private String error;
-    private String message;
-    private String path;
-
-    public ErrorResponse(HttpStatus httpStatus, Exception ex, HttpServletRequest httpRequest) {
-        timestamp = new Timestamp(System.currentTimeMillis());
-        status = httpStatus.value();
-        error = httpStatus.getReasonPhrase();
-        message = ex.getMessage();
-        path = httpRequest.getRequestURI();
-    }
-}

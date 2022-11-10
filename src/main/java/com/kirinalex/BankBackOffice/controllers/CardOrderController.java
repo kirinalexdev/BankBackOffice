@@ -4,21 +4,18 @@ import com.kirinalex.BankBackOffice.models.CardOrder;
 import com.kirinalex.BankBackOffice.services.CardOrderService;
 import com.kirinalex.BankBackOffice.utils.BadRequestException;
 import com.kirinalex.BankBackOffice.utils.CurrencyRateException;
+import com.kirinalex.BankBackOffice.utils.ErrorResponse;
 import lombok.AllArgsConstructor;
-import org.apache.kafka.common.errors.ResourceNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.server.ResponseStatusException;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 import static com.kirinalex.BankBackOffice.utils.ErrorsUtil.generateErrorMessage;
 
@@ -58,27 +55,15 @@ public class CardOrderController  {
     }
 
     @GetMapping("/find-by-id")
-    public CardOrder findbyid(@RequestParam int id, HttpServletResponse httpResponse ) {
+    public ResponseEntity<Object> findbyid(@RequestParam int id, HttpServletRequest httpRequest) {
         var optionalCardOrder = cardOrderService.findById(id);
 
-        // TODO переделать?
-        //      сейчас возврращается
-        //        {
-        //            "timestamp": "2022-11-09T15:49:24.686+00:00",
-        //                "status": 500,
-        //                "error": "Internal Server Error",
-        //                "message": "404 NOT_FOUND \"Card order not found\"",
-        //                "path": "/card-order/find-by-id"
-        //        }
-        //   м.б. сделать ResourceNotFoundException и обрабатывать в своем обработчике
-        //   или все таки просто вернуть объект Errorresponse
-
         if (! optionalCardOrder.isPresent()) {
-            httpResponse.setStatus(HttpStatus.NOT_FOUND.value());
-            return null;
-            //throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Card order not found");
+            var status = HttpStatus.NOT_FOUND;
+            var error =  new ErrorResponse(status, "Не найдена заявка с id = " + id, httpRequest);
+            return new ResponseEntity<>(error, status);
         }
-        return optionalCardOrder.get();
+        return new ResponseEntity<>(optionalCardOrder.get(), HttpStatus.OK);
     }
 
     @GetMapping("/find-by-created-on")
