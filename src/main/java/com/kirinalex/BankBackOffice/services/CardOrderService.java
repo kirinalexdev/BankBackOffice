@@ -14,6 +14,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+// ТОДО все изменения БД сделать через кафку
+
 @Service
 @AllArgsConstructor
 @Transactional(readOnly = true)
@@ -27,7 +29,6 @@ public class CardOrderService {
         cardOrderRepository.save(cardOrder);
     }
 
-    // TODO переименовать
     public void create(CardOrder cardOrder){
         cardOrder.setCreatedOn(new Date());
         kafkaProducer.sendMessage(cardOrder);
@@ -48,7 +49,7 @@ public class CardOrderService {
     }
 
     public List<CardOrder> findByCreatedOnBetween(Date fromDate, Date toDate) {
-        return cardOrderRepository.findByCreatedOnBetween(fromDate, toDate);
+        return cardOrderRepository.findByCreatedOnBetweenOrderByCreatedOn(fromDate, toDate);
     }
 
     public List<Map<String, Object>> topAgentsByOrdersCount(Date fromDate, Date toDate) {

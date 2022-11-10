@@ -13,7 +13,7 @@ import java.util.Map;
 @Repository
 public interface CardOrderRepository extends JpaRepository<CardOrder, Integer> {
 
-    List<CardOrder> findByCreatedOnBetween(Date fromDate, Date toDate);
+    List<CardOrder> findByCreatedOnBetweenOrderByCreatedOn(Date fromDate, Date toDate);
     // TODO добавить сортировку и еще разного - см возможности
 
     @Query(nativeQuery = true,
