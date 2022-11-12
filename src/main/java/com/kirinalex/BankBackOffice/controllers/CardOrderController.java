@@ -31,7 +31,7 @@ public class CardOrderController  {
                        BindingResult bindingResult) throws BadRequestException {
 
         if (bindingResult.hasErrors()) {
-            String s = generateErrorMessage(bindingResult.getFieldErrors());
+            var s = generateErrorMessage(bindingResult.getFieldErrors());
             throw new BadRequestException(s);
         }
 
@@ -43,7 +43,7 @@ public class CardOrderController  {
                        BindingResult bindingResult) throws BadRequestException {
 
         if (bindingResult.hasErrors()) {
-            String s = generateErrorMessage(bindingResult.getFieldErrors());
+            var s = generateErrorMessage(bindingResult.getFieldErrors());
             throw new BadRequestException(s);
         }
 

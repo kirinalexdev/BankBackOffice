@@ -20,9 +20,6 @@ import javax.validation.constraints.Size;
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class Contact {
 
-    // TODO для почту сделать отдельное поле, чтобы применить @Email,
-    //      а этот класс переименовать в Phone
-
     @Id
     @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -33,6 +30,7 @@ public class Contact {
     @NotNull
     private String value;
 
+    // TODO как создавать? https://ru.stackoverflow.com/questions/1466064/%d0%9a%d0%b0%d0%ba-%d0%be%d0%b4%d0%bd%d0%be%d0%b9-%d0%be%d0%bf%d0%b5%d1%80%d0%b0%d1%86%d0%b8%d0%b5%d0%b9-%d1%81%d0%be%d0%b7%d0%b4%d0%b0%d1%82%d1%8c-%d0%b7%d0%b0%d0%bf%d0%b8%d1%81%d0%b8-%d1%81%d0%b2%d1%8f%d0%b7%d0%b0%d0%bd%d0%bd%d1%8b%d1%85-%d1%82%d0%b0%d0%b1%d0%bb%d0%b8%d1%86-onetomany
     @ManyToOne
     @JoinColumn(name = "employee_id", referencedColumnName = "id", nullable=false)
     @NotNull
