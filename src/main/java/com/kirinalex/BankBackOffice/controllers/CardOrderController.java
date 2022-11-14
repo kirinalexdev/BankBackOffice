@@ -26,7 +26,6 @@ public class CardOrderController  {
 
     private final CardOrderService cardOrderService;
 
-    // TODO возвращать ID, и в других моделях тоже
     @PostMapping
     public void create(@RequestBody @Valid CardOrder cardOrder,
                        BindingResult bindingResult) throws BadRequestException {

@@ -30,8 +30,6 @@ public class Contact {
     @NotNull
     private String value;
 
-    // TODO DTO сделать для всех сущностей
-
     @ManyToOne
     @JoinColumn(name = "employee_id", referencedColumnName = "id", nullable=false)
     @NotNull

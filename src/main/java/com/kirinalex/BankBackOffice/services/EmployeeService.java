@@ -26,13 +26,12 @@ public class EmployeeService {
         employeeRepository.save(employee);
     }
 
-    public Optional<Employee> findById(int id) {
-        return employeeRepository.findById(id);
-    }
-
     @Transactional
     public void delete(int id){
         employeeRepository.deleteById(id);
     }
 
+    public Optional<Employee> findById(int id) {
+        return employeeRepository.findById(id);
+    }
 }

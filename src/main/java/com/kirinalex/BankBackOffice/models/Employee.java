@@ -49,16 +49,13 @@ public class Employee {
     @NotNull
     private Date birthday;
 
-    // TODO добавить правильные методы для добавления, удалении контакта, чтобы связь задавалась
-	// см 
-	// public void addComment(PostComment comment) {
-	// 	comments.add(comment);
-	// 	comment.setPost(this);
-	// }
-	// 
-	// public void removeComment(PostComment comment) {
-	// 	comments.remove(comment);
-	// 	comment.setPost(null);
-	// }	
-	// в https://stackoverflow.com/questions/11938253/jpa-joincolumn-vs-mappedby
+    public void addContact(Contact contact) {
+        contacts.add(contact);
+        contact.setEmployee(this);
+    }
+
+    public void removeContact(Contact contact) {
+        contacts.remove(contact);
+        contact.setEmployee(null);
+    }
 }
