@@ -4,7 +4,6 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.kirinalex.BankBackOffice.utils.CurrencyRateException;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
@@ -26,7 +25,7 @@ public class Currency {
         params.put("pair", pair);
         params.put("APIKEY", APIKEY);
 
-        RestTemplate restTemplate = new RestTemplate(); // TODO норм так создавать или внедрением завимисомти нужно?
+        RestTemplate restTemplate = new RestTemplate();
         ResponseEntity<String> response;
         try {
             response = restTemplate.getForEntity(url, String.class, params);

@@ -1,5 +1,6 @@
 package com.kirinalex.BankBackOffice.services;
 
+import com.kirinalex.BankBackOffice.models.Contact;
 import com.kirinalex.BankBackOffice.models.Employee;
 import com.kirinalex.BankBackOffice.repositories.EmployeeRepository;
 import lombok.AllArgsConstructor;
@@ -17,6 +18,11 @@ public class EmployeeService {
 
     @Transactional
     public void save(Employee employee) {
+        var contacts = employee.getContacts();
+        for (Contact contact: contacts) {
+            contact.setEmployee(employee);
+        }
+
         employeeRepository.save(employee);
     }
 

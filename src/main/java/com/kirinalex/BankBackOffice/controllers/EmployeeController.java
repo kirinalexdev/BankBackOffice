@@ -1,6 +1,7 @@
 package com.kirinalex.BankBackOffice.controllers;
 
 import com.kirinalex.BankBackOffice.models.CardOrder;
+import com.kirinalex.BankBackOffice.models.Contact;
 import com.kirinalex.BankBackOffice.models.Employee;
 import com.kirinalex.BankBackOffice.services.EmployeeService;
 import com.kirinalex.BankBackOffice.utils.BadRequestException;
@@ -28,8 +29,8 @@ public class EmployeeController {
                        BindingResult bindingResult) throws BadRequestException {
 
         if (bindingResult.hasErrors()) {
-            var s = generateErrorMessage(bindingResult.getFieldErrors());
-            throw new BadRequestException(s);
+            var errorMessage = generateErrorMessage(bindingResult.getFieldErrors());
+            throw new BadRequestException(errorMessage);
         }
 
         employeeService.save(employee);

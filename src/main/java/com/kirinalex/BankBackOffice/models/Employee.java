@@ -11,6 +11,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -40,11 +41,24 @@ public class Employee {
     @NotNull
     private String lastName;
 
-    @OneToMany(mappedBy = "employee", cascade = CascadeType.ALL, orphanRemoval = true) // TODO nullable = false?
-    private List<Contact> contacts;
+    @OneToMany(mappedBy = "employee", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Contact> contacts = new ArrayList<>(); // TODO вероятно создание отсюда нужно убрать
 
     @Column(name = "birthday", nullable = false)
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     @NotNull
     private Date birthday;
+
+    // TODO добавить правильные методы для добавления, удалении контакта, чтобы связь задавалась
+	// см 
+	// public void addComment(PostComment comment) {
+	// 	comments.add(comment);
+	// 	comment.setPost(this);
+	// }
+	// 
+	// public void removeComment(PostComment comment) {
+	// 	comments.remove(comment);
+	// 	comment.setPost(null);
+	// }	
+	// в https://stackoverflow.com/questions/11938253/jpa-joincolumn-vs-mappedby
 }
