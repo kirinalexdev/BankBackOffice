@@ -34,7 +34,6 @@ public class CardOrderService {
         kafkaProducer.sendMessage(cardOrder);
     }
 
-    @Transactional
     public void update(CardOrder cardOrder) {
         kafkaProducer.sendMessage(cardOrder);
     }

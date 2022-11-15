@@ -11,7 +11,6 @@ public class KafkaTopicConfig {
     @Bean
     public NewTopic CardOrder(){
         return TopicBuilder.name("backoffice.cardorder")
-                .compact()
                 .partitions(3)
                 .build();
     }

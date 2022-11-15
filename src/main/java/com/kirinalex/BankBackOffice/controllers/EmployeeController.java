@@ -57,7 +57,7 @@ public class EmployeeController {
     public ResponseEntity<Object> findbyid(@RequestParam int id, HttpServletRequest httpRequest) {
         var optionalEmployee = employeeService.findById(id);
 
-        if (! optionalEmployee.isPresent()) {
+        if (!optionalEmployee.isPresent()) {
             var status = HttpStatus.NOT_FOUND;
             var error =  new ErrorResponse(status, "Не найден сотрудник с id = " + id, httpRequest);
             return new ResponseEntity<>(error, status);
