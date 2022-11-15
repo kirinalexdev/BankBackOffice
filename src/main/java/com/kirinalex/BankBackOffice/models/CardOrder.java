@@ -19,7 +19,6 @@ import java.util.Date;
 @Getter
 @Setter
 @Builder
-@ToString
 @AllArgsConstructor // нужно, иначе ругается на @Builder
 @NoArgsConstructor  // нужно для десериализатора
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
@@ -53,4 +52,15 @@ public class CardOrder {
     @Size(min = 2, max = 100)
     @NotNull
     private String сlient;
+
+    @Override
+    public String toString() {
+        return "CardOrder{" +
+                "id=" + id +
+                ", agent=" + agent +
+                ", creditLimit=" + creditLimit +
+                ", createdOn=" + createdOn +
+                ", сlient='" + сlient + '\'' +
+                '}';
+    }
 }

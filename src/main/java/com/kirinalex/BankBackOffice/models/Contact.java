@@ -14,7 +14,6 @@ import javax.validation.constraints.Size;
 @Getter
 @Setter
 @Builder
-@ToString
 @AllArgsConstructor // нужно, иначе ругается на @Builder  TODO написать какая именно ошибка
 @NoArgsConstructor
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
@@ -39,5 +38,14 @@ public class Contact {
     @Enumerated(EnumType.STRING)
     @NotNull
     private ContactType type;
+
+    @Override
+    public String toString() {
+        return "Contact{" +
+                "id=" + id +
+                ", value='" + value + '\'' +
+                ", type=" + type +
+                '}';
+    }
 
 }
