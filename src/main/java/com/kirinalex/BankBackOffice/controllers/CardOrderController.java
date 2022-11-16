@@ -54,9 +54,7 @@ public class CardOrderController  {
             throw new BadRequestException(s);
         }
 
-        // TODO сделать modelMapper отдельным классом как тут? https://tproger.ru/articles/chto-takoe-modelmapper-i-zachem-on-nuzhen/
-        //      назвать как то по привязанно к cardOrder, а не просто modelMapper
-        var id = cardOrderDTO.getId(); // TODO удалить, дублирует
+        var id = cardOrderDTO.getId();
         var cardOrder = cardOrderService.findById(id).orElse(null);
 
         if (cardOrder == null) {
@@ -67,7 +65,6 @@ public class CardOrderController  {
         cardOrderService.update(cardOrder);
 
         return new ResponseEntity<>(null, HttpStatus.OK);
-        // TODO остальные методы тоже маппить
     }
 
     @DeleteMapping

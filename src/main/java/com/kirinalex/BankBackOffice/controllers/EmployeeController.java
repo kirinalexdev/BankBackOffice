@@ -21,6 +21,8 @@ import static com.kirinalex.BankBackOffice.utils.ErrorsUtil.generateErrorMessage
 @RequestMapping("/employee")
 @AllArgsConstructor
 public class EmployeeController {
+//    DTO сделать
+//в новой ветке разрабатывать
 
     private final EmployeeService employeeService;
 
