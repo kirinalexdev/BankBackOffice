@@ -16,7 +16,7 @@ public class Currency {
     public static double currencyRate(String baseCurrency) throws CurrencyRateException {
 
         String url = "https://currate.ru/api/?get=rates&pairs={pair}&key={APIKEY}";
-        String APIKEY = "b55fd8a9dbf46c8c7f1d959e1635f03c"; // TODO вынести куда то в настройки? или как хранить?
+        String APIKEY = "b55fd8a9dbf46c8c7f1d959e1635f03c";
         String quotedCurrency = "RUB";
         String pair = baseCurrency + quotedCurrency;
         String prefixErrorMessage = "Не удалось получить курс валюты. ";

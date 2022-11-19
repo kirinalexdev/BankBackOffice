@@ -15,6 +15,7 @@ public class UtilConfig {
     @Bean
     public ModelMapper employeeModelMapper(){
         var modelMapper = new ModelMapper();
+        //modelMapper.getConfiguration().setCollectionsMergeEnabled(false);
         //modelMapper.createTypeMap(EmployeeDTOId.class, Employee.class);
         return modelMapper;
     }

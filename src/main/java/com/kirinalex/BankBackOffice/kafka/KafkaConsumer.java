@@ -9,11 +9,9 @@ import org.springframework.stereotype.Service;
 @Service
 @AllArgsConstructor
 public class KafkaConsumer {
-// TODO реализовать Consumer отдельным проектом или этот проект сделать мультимодульным?
-
     private final CardOrderService cardOrderService;
 
-    @KafkaListener(topics = "backoffice.cardorder", groupId = "backoffice") // TODO хардкодом так backoffice.cardorder и group1 или где хранить?
+    @KafkaListener(topics = "backoffice.cardorder", groupId = "backoffice")
     public void consume(CardOrder cardOrder) {
         cardOrderService.save(cardOrder);
         System.out.println("consumer get: " + cardOrder);

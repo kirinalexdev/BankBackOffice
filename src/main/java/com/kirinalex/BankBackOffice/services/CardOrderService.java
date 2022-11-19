@@ -23,7 +23,6 @@ public class CardOrderService {
 
     private KafkaProducer kafkaProducer;
     private final CardOrderRepository cardOrderRepository;
-
     @Transactional
     public void save(CardOrder cardOrder) {
         cardOrderRepository.save(cardOrder);

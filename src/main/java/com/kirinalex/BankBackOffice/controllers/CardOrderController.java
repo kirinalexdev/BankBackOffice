@@ -2,7 +2,6 @@ package com.kirinalex.BankBackOffice.controllers;
 
 import com.kirinalex.BankBackOffice.dto.CardOrderDTO;
 import com.kirinalex.BankBackOffice.models.CardOrder;
-import com.kirinalex.BankBackOffice.repositories.CardOrderRepository;
 import com.kirinalex.BankBackOffice.services.CardOrderService;
 import com.kirinalex.BankBackOffice.utils.BadRequestException;
 import com.kirinalex.BankBackOffice.utils.CurrencyRateException;
@@ -30,15 +29,14 @@ public class CardOrderController  {
 
     private final CardOrderService cardOrderService;
     private final ModelMapper employeeModelMapper;
-    private final ModelMapper employeeModelMapper2;
 
     @PostMapping
     public void create(@RequestBody @Valid CardOrderDTO cardOrderDTO,
                        BindingResult bindingResult) throws BadRequestException {
-        // TODO проверять, что ID не передан
+
         if (bindingResult.hasErrors()) {
-            var s = generateErrorMessage(bindingResult.getFieldErrors());
-            throw new BadRequestException(s);
+            var errorMessage = generateErrorMessage(bindingResult.getFieldErrors());
+            throw new BadRequestException(errorMessage);
         }
 
         var cardOrder = employeeModelMapper.map(cardOrderDTO, CardOrder.class);
@@ -50,8 +48,8 @@ public class CardOrderController  {
                        BindingResult bindingResult) throws BadRequestException {
 
         if (bindingResult.hasErrors()) {
-            var s = generateErrorMessage(bindingResult.getFieldErrors());
-            throw new BadRequestException(s);
+            var errorMessage = generateErrorMessage(bindingResult.getFieldErrors());
+            throw new BadRequestException(errorMessage);
         }
 
         var id = cardOrderDTO.getId();

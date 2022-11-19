@@ -1,12 +1,12 @@
 package com.kirinalex.BankBackOffice.controllers;
 
-import com.kirinalex.BankBackOffice.models.CardOrder;
-import com.kirinalex.BankBackOffice.models.Contact;
+import com.kirinalex.BankBackOffice.dto.EmployeeDTO;
 import com.kirinalex.BankBackOffice.models.Employee;
 import com.kirinalex.BankBackOffice.services.EmployeeService;
 import com.kirinalex.BankBackOffice.utils.BadRequestException;
 import com.kirinalex.BankBackOffice.utils.ErrorResponse;
 import lombok.AllArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
@@ -21,13 +21,11 @@ import static com.kirinalex.BankBackOffice.utils.ErrorsUtil.generateErrorMessage
 @RequestMapping("/employee")
 @AllArgsConstructor
 public class EmployeeController {
-//    DTO сделать
-//в новой ветке разрабатывать
-
     private final EmployeeService employeeService;
+    private final ModelMapper employeeModelMapper;
 
     @PostMapping
-    public void create(@RequestBody @Valid Employee employee,
+    public void create(@RequestBody @Valid EmployeeDTO employeeDTO,
                        BindingResult bindingResult) throws BadRequestException {
 
         if (bindingResult.hasErrors()) {
@@ -35,19 +33,35 @@ public class EmployeeController {
             throw new BadRequestException(errorMessage);
         }
 
+        var employee = employeeModelMapper.map(employeeDTO, Employee.class);
         employeeService.save(employee);
     }
 
     @PutMapping
-    public void update(@RequestBody @Valid Employee employee,
+    public ResponseEntity<Object> update(@RequestBody @Valid EmployeeDTO employeeDTO,
+                       HttpServletRequest httpRequest,
                        BindingResult bindingResult) throws BadRequestException {
 
         if (bindingResult.hasErrors()) {
-            var s = generateErrorMessage(bindingResult.getFieldErrors());
-            throw new BadRequestException(s);
+            var errorMessage = generateErrorMessage(bindingResult.getFieldErrors());
+            throw new BadRequestException(errorMessage);
         }
 
+        var id = employeeDTO.getId();
+        var employee = employeeService.findById(id).orElse(null);
+
+        if (employee == null) {
+            return errorResponseNotFound(id, httpRequest);
+        }
+
+        employeeModelMapper.map(employeeDTO, employee);
         employeeService.save(employee);
+
+        return new ResponseEntity<>(null, HttpStatus.OK);
+
+        // TODO Сделать возможность удаления контактов. Сейчас же используется версия 2.1.1 ModelMapper,
+        //      в которой нет такошго свойства modelMapper.getConfiguration().setCollectionsMergeEnabled(false);
+        //      Причина по которой используется старая версия описана здсь привестим эту ссылку https://github.com/modelmapper/modelmapper/issues/479
     }
 
     @DeleteMapping
@@ -56,14 +70,21 @@ public class EmployeeController {
     }
 
     @GetMapping("/find-by-id")
-    public ResponseEntity<Object> findbyid(@RequestParam int id, HttpServletRequest httpRequest) {
-        var optionalEmployee = employeeService.findById(id);
+    public ResponseEntity<Object> findbyid(@RequestParam int id,
+                                           HttpServletRequest httpRequest) {
+        var employee = employeeService.findById(id).orElse(null);
 
-        if (!optionalEmployee.isPresent()) {
-            var status = HttpStatus.NOT_FOUND;
-            var error =  new ErrorResponse(status, "Не найден сотрудник с id = " + id, httpRequest);
-            return new ResponseEntity<>(error, status);
+        if (employee == null) {
+            return errorResponseNotFound(id, httpRequest);
         }
-        return new ResponseEntity<>(optionalEmployee.get(), HttpStatus.OK);
+
+        var employeeDTO= employeeModelMapper.map(employee, EmployeeDTO.class);
+        return new ResponseEntity<>(employeeDTO, HttpStatus.OK);
+    }
+
+    private ResponseEntity<Object> errorResponseNotFound(int idEmployee, HttpServletRequest httpRequest){
+        var status = HttpStatus.NOT_FOUND;
+        var error =  new ErrorResponse(status, "Не найден сотрудник с id = " + idEmployee, httpRequest);
+        return new ResponseEntity<>(error, status);
     }
 }

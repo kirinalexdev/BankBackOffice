@@ -6,7 +6,6 @@ import java.util.List;
 
 public class  ErrorsUtil {
 
-    // TODO найти в сети может более красивые приемы
     public static String generateErrorMessage(List<FieldError> errors){
         var errorsSB = new StringBuilder();
 
