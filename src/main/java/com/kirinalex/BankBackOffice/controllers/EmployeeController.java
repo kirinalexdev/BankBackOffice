@@ -1,11 +1,14 @@
 package com.kirinalex.BankBackOffice.controllers;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.kirinalex.BankBackOffice.dto.EmployeeDTO;
 import com.kirinalex.BankBackOffice.models.Employee;
 import com.kirinalex.BankBackOffice.services.EmployeeService;
 import com.kirinalex.BankBackOffice.utils.BadRequestException;
 import com.kirinalex.BankBackOffice.utils.ErrorResponse;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,18 +23,17 @@ import static com.kirinalex.BankBackOffice.utils.ErrorsUtil.generateErrorMessage
 @RestController
 @RequestMapping("/employee")
 @AllArgsConstructor
+@Slf4j
 public class EmployeeController {
     private final EmployeeService employeeService;
     private final ModelMapper employeeModelMapper;
+    private final ObjectMapper objectMapper;
 
     @PostMapping
     public void create(@RequestBody @Valid EmployeeDTO employeeDTO,
-                       BindingResult bindingResult) throws BadRequestException {
+                       BindingResult bindingResult) throws Exception {
 
-        if (bindingResult.hasErrors()) {
-            var errorMessage = generateErrorMessage(bindingResult.getFieldErrors());
-            throw new BadRequestException(errorMessage);
-        }
+        checkBindingResult(bindingResult, employeeDTO);
 
         var employee = employeeModelMapper.map(employeeDTO, Employee.class);
         employeeService.save(employee);
@@ -40,12 +42,9 @@ public class EmployeeController {
     @PutMapping
     public ResponseEntity<Object> update(@RequestBody @Valid EmployeeDTO employeeDTO,
                        HttpServletRequest httpRequest,
-                       BindingResult bindingResult) throws BadRequestException {
+                       BindingResult bindingResult) throws BadRequestException, JsonProcessingException {
 
-        if (bindingResult.hasErrors()) {
-            var errorMessage = generateErrorMessage(bindingResult.getFieldErrors());
-            throw new BadRequestException(errorMessage);
-        }
+        checkBindingResult(bindingResult, employeeDTO);
 
         var id = employeeDTO.getId();
         var employee = employeeService.findById(id).orElse(null);
@@ -74,12 +73,21 @@ public class EmployeeController {
                                            HttpServletRequest httpRequest) {
         var employee = employeeService.findById(id).orElse(null);
 
-        if (employee == null) {
+        if (employee == null) {//TODO логировать? с каким уровнем?
             return errorResponseNotFound(id, httpRequest);
         }
 
         var employeeDTO= employeeModelMapper.map(employee, EmployeeDTO.class);
         return new ResponseEntity<>(employeeDTO, HttpStatus.OK);
+    }
+
+    private void checkBindingResult (BindingResult bindingResult, EmployeeDTO employeeDTO) throws BadRequestException, JsonProcessingException {
+        if (bindingResult.hasErrors()) {
+            var message = generateErrorMessage(bindingResult.getFieldErrors());
+            log.error("{}. employeeDTO:{}", message, objectMapper.writeValueAsString(employeeDTO), new Throwable());
+            throw new BadRequestException(message);
+        }
+
     }
 
     private ResponseEntity<Object> errorResponseNotFound(int idEmployee, HttpServletRequest httpRequest){

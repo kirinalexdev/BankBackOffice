@@ -4,6 +4,9 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.kirinalex.BankBackOffice.utils.CurrencyRateException;
+import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
@@ -11,6 +14,7 @@ import org.springframework.web.client.RestTemplate;
 import java.util.HashMap;
 import java.util.Map;
 
+@Slf4j
 public class Currency {
 
     public static double currencyRate(String baseCurrency) throws CurrencyRateException {
@@ -30,7 +34,7 @@ public class Currency {
         try {
             response = restTemplate.getForEntity(url, String.class, params);
         } catch (Exception ex) {
-            // TODO здесь логировать фактический текст ошибки урлом и параметрами вызова
+            log.error("{}. baseCurrency:{} responseBody:{}", ex.getMessage(), baseCurrency, ex);
             throw new CurrencyRateException(prefixErrorMessage, HttpStatus.SERVICE_UNAVAILABLE);
         }
 
@@ -44,22 +48,23 @@ public class Currency {
         try {
             rootNode = mapper.readTree(responseBody);
         } catch (JsonProcessingException ex) {
-            // TODO здесь логировать ex.getMessage() и responseBody
+            log.error("{}. baseCurrency:{} responseBody:{}", ex.getMessage(), baseCurrency, responseBody, ex);
             throw new CurrencyRateException(prefixErrorMessage, HttpStatus.SERVICE_UNAVAILABLE);
         }
 
-        HttpStatus statusCode = HttpStatus.valueOf(rootNode.get("status").asInt());
+        var statusCode = rootNode.get("status").asInt();
+        var status = HttpStatus.valueOf(statusCode);
 
-        if (statusCode != HttpStatus.OK) {
+        if (status != HttpStatus.OK) {
             String message = (prefixErrorMessage + rootNode.get("message").asText());
-            throw new CurrencyRateException(message, statusCode);
+            log.error("{}. baseCurrency:{} statusCode{} responseBody:{}", message, baseCurrency, statusCode, responseBody, new Throwable());
+            throw new CurrencyRateException(message, status);
         }
 
-        var dataNodeName = "data";
         try {
-            return rootNode.get(dataNodeName).get(pair).asDouble();
+            return rootNode.get("data").get(pair).asDouble();
         } catch (Exception ex) {
-            // TODO здесь логировать ex.getMessage() и responseBody и "Не удалось как число Double получить данные узла json "+ dataNodeName + "." + pair;
+            log.error("{}. baseCurrency:{} responseBody:{}", ex.getMessage(), baseCurrency, responseBody, ex);
             throw new CurrencyRateException(prefixErrorMessage, HttpStatus.SERVICE_UNAVAILABLE);
         }
     }
