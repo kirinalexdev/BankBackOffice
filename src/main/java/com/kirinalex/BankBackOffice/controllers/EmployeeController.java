@@ -7,9 +7,10 @@ import com.kirinalex.BankBackOffice.models.Employee;
 import com.kirinalex.BankBackOffice.services.EmployeeService;
 import com.kirinalex.BankBackOffice.utils.BadRequestException;
 import com.kirinalex.BankBackOffice.utils.ErrorResponse;
-import lombok.AllArgsConstructor;
+import lombok.*;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
@@ -18,31 +19,39 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
+import java.net.URI;
+import java.net.URISyntaxException;
+
 import static com.kirinalex.BankBackOffice.utils.ErrorsUtil.generateErrorMessage;
 
 @RestController
 @RequestMapping("/employee")
+@Setter
 @AllArgsConstructor
 @Slf4j
 public class EmployeeController {
-    private final EmployeeService employeeService;
-    private final ModelMapper employeeModelMapper;
-    private final ObjectMapper objectMapper;
+    private EmployeeService employeeService;
+    private ModelMapper employeeModelMapper;
 
     @PostMapping
-    public void create(@RequestBody @Valid EmployeeDTO employeeDTO,
-                       BindingResult bindingResult) throws Exception {
+    public ResponseEntity<Object> create(@RequestBody @Valid EmployeeDTO employeeDTO,
+                       BindingResult bindingResult) throws BadRequestException, JsonProcessingException, URISyntaxException {
 
         checkBindingResult(bindingResult, employeeDTO);
 
         var employee = employeeModelMapper.map(employeeDTO, Employee.class);
         employeeService.save(employee);
+
+        return ResponseEntity
+                .created(new URI("/employee/" + employee.getId()))
+                .build();
+
     }
 
     @PutMapping
     public ResponseEntity<Object> update(@RequestBody @Valid EmployeeDTO employeeDTO,
-                       HttpServletRequest httpRequest,
-                       BindingResult bindingResult) throws BadRequestException, JsonProcessingException {
+                                         BindingResult bindingResult,
+                                         HttpServletRequest httpRequest) throws BadRequestException, JsonProcessingException {
 
         checkBindingResult(bindingResult, employeeDTO);
 
@@ -65,12 +74,19 @@ public class EmployeeController {
     }
 
     @DeleteMapping
-    public void delete(@RequestParam int id) {
+    public ResponseEntity<Object> delete(@RequestParam int id, HttpServletRequest httpRequest) {
+        var employee = employeeService.findById(id).orElse(null);
+
+        if (employee == null) {
+            return errorResponseNotFound(id, httpRequest);
+        }
+
         employeeService.delete(id);
+        return ResponseEntity.ok().build();
     }
 
-    @GetMapping("/find-by-id")
-    public ResponseEntity<Object> findbyid(@RequestParam int id,
+    @GetMapping
+    public ResponseEntity<Object>  findById(@RequestParam int id,
                                            HttpServletRequest httpRequest) {
         var employee = employeeService.findById(id).orElse(null);
 
@@ -82,13 +98,12 @@ public class EmployeeController {
         return new ResponseEntity<>(employeeDTO, HttpStatus.OK);
     }
 
-    private void checkBindingResult (BindingResult bindingResult, EmployeeDTO employeeDTO) throws BadRequestException, JsonProcessingException {
+    protected void checkBindingResult(BindingResult bindingResult, EmployeeDTO employeeDTO) throws BadRequestException, JsonProcessingException {
         if (bindingResult.hasErrors()) {
             var message = generateErrorMessage(bindingResult.getFieldErrors());
-            log.error("{}. employeeDTO:{}", message, objectMapper.writeValueAsString(employeeDTO), new Throwable());
+            log.error("{}. {}", message, employeeDTO, new Throwable());
             throw new BadRequestException(message);
         }
-
     }
 
     private ResponseEntity<Object> errorResponseNotFound(int idEmployee, HttpServletRequest httpRequest){

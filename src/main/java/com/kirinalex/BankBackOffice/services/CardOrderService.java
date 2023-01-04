@@ -6,13 +6,13 @@ import com.kirinalex.BankBackOffice.repositories.CardOrderRepository;
 import com.kirinalex.BankBackOffice.finance.Currency;
 import com.kirinalex.BankBackOffice.utils.CurrencyRateException;
 import lombok.AllArgsConstructor;
+import org.joda.time.DateTime;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.*;
 
 // ТОДО все изменения БД сделать через кафку
 
@@ -29,7 +29,7 @@ public class CardOrderService {
     }
 
     public void create(CardOrder cardOrder){
-        cardOrder.setCreatedOn(new Date());
+        cardOrder.setCreatedOn(LocalDateTime.now());
         kafkaProducer.sendMessage(cardOrder);
     }
 
@@ -46,15 +46,15 @@ public class CardOrderService {
         return cardOrderRepository.findById(id);
     }
 
-    public List<CardOrder> findByCreatedOnBetween(Date fromDate, Date toDate) {
-        return cardOrderRepository.findByCreatedOnBetweenOrderByCreatedOn(fromDate, toDate);
+    public List<CardOrder> findByCreatedOnBetweenOrderByCreatedOn(LocalDateTime fromDate, LocalDateTime toDate) {
+        return cardOrderRepository.findByCreatedOnBetweenOrderByCreatedOn(fromDate, toDate.plusNanos(999999999));
     }
 
-    public List<Map<String, Object>> topAgentsByOrdersCount(Date fromDate, Date toDate) {
-        return cardOrderRepository.topAgentsByOrdersCount(fromDate, toDate);
+    public List<Map<String, Object>> topAgentsByOrdersCount(LocalDateTime fromDate, LocalDateTime toDate) {
+        return cardOrderRepository.topAgentsByOrdersCount(fromDate, toDate.plusNanos(999999999));
     }
 
-    public List<Map<String, Object>> monthlyTotals(Date fromDate, Date toDate, String currency) throws CurrencyRateException {
+    public List<Map<String, Object>> monthlyTotals(LocalDateTime fromDate, LocalDateTime toDate, String currency) throws CurrencyRateException {
         double currencyRate = Currency.currencyRate(currency);
         return cardOrderRepository.monthlyTotals(fromDate, toDate, currencyRate);
     }

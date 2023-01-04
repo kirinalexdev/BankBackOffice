@@ -6,13 +6,16 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
 @Repository
 public interface CardOrderRepository extends JpaRepository<CardOrder, Integer> {
-    List<CardOrder> findByCreatedOnBetweenOrderByCreatedOn(Date fromDate, Date toDate);
+
+    List<CardOrder> findByCreatedOnBetweenOrderByCreatedOn(LocalDateTime fromDate, LocalDateTime toDate);
 
     @Query(nativeQuery = true,
     value = """
@@ -35,12 +38,15 @@ public interface CardOrderRepository extends JpaRepository<CardOrder, Integer> {
             agent_id
         ORDER BY 
             orders_count DESC
-        LIMIT 10) counts
+        LIMIT 3) counts
     LEFT JOIN employee 
-        ON counts.agent_id = employee.id""")
-    List<Map<String, Object>> topAgentsByOrdersCount(@Param("fromDate") Date fromDate,
-                                                     @Param("toDate") Date toDate);
+        ON counts.agent_id = employee.id
+    ORDER BY 
+        orders_count DESC""")
+    List<Map<String, Object>> topAgentsByOrdersCount(@Param("fromDate") LocalDateTime fromDate,
+                                                     @Param("toDate") LocalDateTime toDate);
 
+    // todo понять, почему month_begin в реальном вызове вовращает число, а не дату
     @Query(nativeQuery = true,
     value = """
     SELECT
@@ -55,8 +61,8 @@ public interface CardOrderRepository extends JpaRepository<CardOrder, Integer> {
          month_begin
     ORDER BY
          month_begin""")
-    List<Map<String, Object>> monthlyTotals(@Param("fromDate") Date fromDate,
-                                            @Param("toDate") Date toDate,
+    List<Map<String, Object>> monthlyTotals(@Param("fromDate") LocalDateTime fromDate,
+                                            @Param("toDate") LocalDateTime toDate,
                                             @Param("currencyRate") double currencyRate);
 
 }

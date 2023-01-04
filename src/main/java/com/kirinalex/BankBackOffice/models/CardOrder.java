@@ -3,12 +3,16 @@ package com.kirinalex.BankBackOffice.models;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import lombok.*;
+import org.joda.time.DateTime;
 
 import javax.persistence.*;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.Calendar;
 import java.util.Date;
 
 @Entity
@@ -16,7 +20,7 @@ import java.util.Date;
 @Getter
 @Setter
 @Builder
-@AllArgsConstructor // нужно, иначе ругается на @Builder
+@AllArgsConstructor // нужно для @Builder
 @NoArgsConstructor  // нужно для десериализатора
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class CardOrder {
@@ -37,13 +41,12 @@ public class CardOrder {
     private BigDecimal creditLimit;
 
     @Column(name = "created_on", nullable = false)
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date createdOn;
+    private LocalDateTime createdOn;
 
-    @Column(name = "сlient", length = 100, nullable = false)
+    @Column(name = "client", length = 100, nullable = false)
     @Size(min = 2, max = 100)
     @NotNull
-    private String сlient;
+    private String client;
 
     @Override
     public String toString() {
@@ -52,7 +55,7 @@ public class CardOrder {
                 ", agent=" + agent +
                 ", creditLimit=" + creditLimit +
                 ", createdOn=" + createdOn +
-                ", сlient='" + сlient + '\'' +
+                ", client='" + client + '\'' +
                 '}';
     }
 }

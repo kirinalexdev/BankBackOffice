@@ -7,14 +7,18 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 @Getter
 @Setter
+@Builder
+@AllArgsConstructor
 @NoArgsConstructor
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
+@ToString
 public class EmployeeDTO {
 
     private int id;
@@ -31,5 +35,5 @@ public class EmployeeDTO {
 
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     @NotNull
-    private Date birthday;
+    private LocalDate birthday;
 }

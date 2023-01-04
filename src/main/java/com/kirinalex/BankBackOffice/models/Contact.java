@@ -15,7 +15,7 @@ import java.util.Objects;
 @Getter
 @Setter
 @Builder
-@AllArgsConstructor // нужно, иначе ругается на @Builder  TODO написать какая именно ошибка
+@AllArgsConstructor // нужно для @Builder
 @NoArgsConstructor
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class Contact {

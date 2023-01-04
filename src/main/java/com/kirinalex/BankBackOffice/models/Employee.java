@@ -11,17 +11,15 @@ import org.springframework.format.annotation.DateTimeFormat;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Objects;
+import java.time.LocalDate;
+import java.util.*;
 
 @Entity
 @Table(name = "employee")
 @Getter
 @Setter
 @Builder
-@AllArgsConstructor // нужно, иначе ругается на @Builder
+@AllArgsConstructor // нужно для @Builder
 @NoArgsConstructor
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class Employee {
@@ -47,7 +45,7 @@ public class Employee {
     @Column(name = "birthday", nullable = false)
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     @NotNull
-    private Date birthday;
+    private LocalDate birthday;
 
     public void addContact(Contact contact) {
         contacts.add(contact);

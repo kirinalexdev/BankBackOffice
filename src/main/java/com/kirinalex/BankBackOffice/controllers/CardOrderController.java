@@ -11,6 +11,7 @@ import com.kirinalex.BankBackOffice.utils.ErrorResponse;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
@@ -18,6 +19,10 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -35,13 +40,17 @@ public class CardOrderController  {
     private final ObjectMapper objectMapper;
 
     @PostMapping
-    public void create(@RequestBody @Valid CardOrderDTO cardOrderDTO,
-                       BindingResult bindingResult) throws BadRequestException, JsonProcessingException {
+    public ResponseEntity<Object> create(@RequestBody @Valid CardOrderDTO cardOrderDTO,
+                       BindingResult bindingResult) throws BadRequestException, JsonProcessingException, URISyntaxException {
 
         checkBindingResult(bindingResult, cardOrderDTO);
 
         var cardOrder = employeeModelMapper.map(cardOrderDTO, CardOrder.class);
         cardOrderService.create(cardOrder);
+
+        return ResponseEntity
+                .created(new URI("/card-order/" + cardOrder.getId()))
+                .build();
     }
 
     @PutMapping
@@ -64,11 +73,17 @@ public class CardOrderController  {
     }
 
     @DeleteMapping
-    public void delete(@RequestParam int id) {
+    public ResponseEntity<Object>  delete(@RequestParam int id, HttpServletRequest httpRequest) {
+        var cardOrder = cardOrderService.findById(id).orElse(null);
+
+        if (cardOrder == null) {
+            return errorResponseNotFound(id, httpRequest);
+        }
         cardOrderService.delete(id);
+        return ResponseEntity.ok().build();
     }
 
-    @GetMapping("/find-by-id")
+    @GetMapping
     public ResponseEntity<Object> findbyid(@RequestParam int id, HttpServletRequest httpRequest) {
         var cardOrder = cardOrderService.findById(id).orElse(null);
 
@@ -81,23 +96,23 @@ public class CardOrderController  {
     }
 
     @GetMapping("/find-by-created-on")
-    public List<CardOrderDTO> findByCreatedOnBetween(@RequestParam Date fromDate,
-                                                  @RequestParam Date toDate){
-       return cardOrderService.findByCreatedOnBetween(fromDate, toDate)
+    public List<CardOrderDTO> findByCreatedOnBetween(@RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime fromDate,
+                                                  @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime toDate){
+       return cardOrderService.findByCreatedOnBetweenOrderByCreatedOn(fromDate, toDate)
                .stream()
                .map(cardOrder -> employeeModelMapper.map(cardOrder, CardOrderDTO.class))
                .collect(Collectors.toList());
     }
 
     @GetMapping("/top-agents-by-orders-count")
-    public List<Map<String, Object>> topAgentsByOrdersCount(@RequestParam Date fromDate,
-                                                            @RequestParam Date toDate){
+    public List<Map<String, Object>> topAgentsByOrdersCount(@RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime fromDate,
+                                                            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime toDate){
        return cardOrderService.topAgentsByOrdersCount(fromDate, toDate);
     }
 
     @GetMapping("/monthly-totals")
-    public List<Map<String, Object>> monthlyTotals(@RequestParam Date fromDate,
-                                                    @RequestParam Date toDate,
+    public List<Map<String, Object>> monthlyTotals(@RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime fromDate,
+                                                   @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime toDate,
                                                     @RequestParam String currency) throws CurrencyRateException {
         return cardOrderService.monthlyTotals(fromDate, toDate, currency);
     }

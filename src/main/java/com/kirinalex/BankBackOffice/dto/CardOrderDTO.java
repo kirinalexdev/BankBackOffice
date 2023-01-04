@@ -11,7 +11,10 @@ import java.math.BigDecimal;
 
 @Getter
 @Setter
+@Builder
+@AllArgsConstructor // нужно для @Builder
 @NoArgsConstructor
+@EqualsAndHashCode
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class CardOrderDTO {
 
@@ -26,5 +29,5 @@ public class CardOrderDTO {
 
     @Size(min = 2, max = 100)
     @NotNull
-    private String сlient;
+    private String client;
 }
