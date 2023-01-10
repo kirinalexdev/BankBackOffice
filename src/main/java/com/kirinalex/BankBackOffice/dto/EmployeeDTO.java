@@ -2,6 +2,8 @@ package com.kirinalex.BankBackOffice.dto;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import io.swagger.annotations.ApiModelProperty;
+import io.swagger.annotations.ApiResponses;
 import lombok.*;
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -34,6 +36,8 @@ public class EmployeeDTO {
     private List<ContactDTO> contacts = new ArrayList<>();
 
     @DateTimeFormat(pattern = "yyyy-MM-dd")
+
+    @ApiModelProperty(example = "2021-08-20") // без этого swagger отображает сложную структуру для LocalDate
     @NotNull
     private LocalDate birthday;
 }

@@ -1,20 +1,21 @@
 package com.kirinalex.BankBackOffice.services;
 
+import com.kirinalex.BankBackOffice.dao.CardOrderDAO;
+import com.kirinalex.BankBackOffice.dto.MonthlyTotalsDTO;
+import com.kirinalex.BankBackOffice.dto.TopAgentsByOrdersDTO;
 import com.kirinalex.BankBackOffice.kafka.KafkaProducer;
 import com.kirinalex.BankBackOffice.models.CardOrder;
 import com.kirinalex.BankBackOffice.repositories.CardOrderRepository;
 import com.kirinalex.BankBackOffice.finance.Currency;
 import com.kirinalex.BankBackOffice.utils.CurrencyRateException;
 import lombok.AllArgsConstructor;
-import org.joda.time.DateTime;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
 
-// ТОДО все изменения БД сделать через кафку
+// TODO все изменения БД сделать через кафку?
 
 @Service
 @AllArgsConstructor
@@ -22,6 +23,7 @@ import java.util.*;
 public class CardOrderService {
     private KafkaProducer kafkaProducer;
     private final CardOrderRepository cardOrderRepository;
+    private final CardOrderDAO cardOrderDAO;
 
     @Transactional
     public void save(CardOrder cardOrder) {
@@ -50,12 +52,12 @@ public class CardOrderService {
         return cardOrderRepository.findByCreatedOnBetweenOrderByCreatedOn(fromDate, toDate.plusNanos(999999999));
     }
 
-    public List<Map<String, Object>> topAgentsByOrdersCount(LocalDateTime fromDate, LocalDateTime toDate) {
-        return cardOrderRepository.topAgentsByOrdersCount(fromDate, toDate.plusNanos(999999999));
+    public List<TopAgentsByOrdersDTO> topAgentsByOrdersCount(LocalDateTime fromDate, LocalDateTime toDate) {
+        return cardOrderDAO.topAgentsByOrdersCount(fromDate, toDate.plusNanos(999999999));
     }
 
-    public List<Map<String, Object>> monthlyTotals(LocalDateTime fromDate, LocalDateTime toDate, String currency) throws CurrencyRateException {
+    public List<MonthlyTotalsDTO> monthlyTotals(LocalDateTime fromDate, LocalDateTime toDate, String currency) throws CurrencyRateException {
         double currencyRate = Currency.currencyRate(currency);
-        return cardOrderRepository.monthlyTotals(fromDate, toDate, currencyRate);
+        return cardOrderDAO.monthlyTotals(fromDate, toDate, currencyRate);
     }
 }

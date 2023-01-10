@@ -4,6 +4,8 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.kirinalex.BankBackOffice.dto.CardOrderDTO;
 import com.kirinalex.BankBackOffice.dto.EmployeeDTOId;
+import com.kirinalex.BankBackOffice.dto.MonthlyTotalsDTO;
+import com.kirinalex.BankBackOffice.dto.TopAgentsByOrdersDTO;
 import com.kirinalex.BankBackOffice.models.CardOrder;
 import com.kirinalex.BankBackOffice.models.Employee;
 import com.kirinalex.BankBackOffice.services.CardOrderService;
@@ -18,6 +20,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
@@ -284,13 +287,13 @@ class CardOrderControllerTest {
         var fromDate = LocalDateTime.of(2000,3,4, 0,0,0);
         var toDate = LocalDateTime.of(2000,3,5, 23,59,59);
 
-        var expectedList = new ArrayList<Map<String, Object>>();
-        expectedList.add(Map.of(
-                "orders_count", 5,
-                "credit_limit_sum", 30000,
-                "agent_id", 2,
-                "first_name", "Firstname1",
-                "last_name", "Lastname1"));
+        var expectedList = new ArrayList<TopAgentsByOrdersDTO>();
+        expectedList.add(TopAgentsByOrdersDTO.builder()
+                .ordersCount(BigInteger.valueOf(5))
+                .creditLimitSum(BigDecimal.valueOf(30000*100, 2))
+                .agentId(2)
+                .firstName("Firstname1")
+                .lastName("Lastname1").build());
 
         given(cardOrderService.topAgentsByOrdersCount(fromDate, toDate))
                 .willReturn(expectedList);
@@ -305,9 +308,9 @@ class CardOrderControllerTest {
 
         var result = resultActions.andReturn();
 
-        List<Map<String, Object>> actualList = objectMapper.readValue(
+        var actualList = objectMapper.readValue(
                 result.getResponse().getContentAsString(),
-                    new TypeReference<List<Map<String, Object>>>() {});
+                    new TypeReference<List<TopAgentsByOrdersDTO>>() {});
 
         assertThat(actualList.size()).isEqualTo(expectedList.size());
         assertThat(actualList).isEqualTo(expectedList);
@@ -321,20 +324,14 @@ class CardOrderControllerTest {
         var toDate = LocalDateTime.of(2000,3,5, 23,59,59);
         var currency = "USD";
 
-        var expectedList = new ArrayList<Map<String, Object>>();
-        expectedList.add(Map.of(
-                "month_begin", "2000-03-04T00:00:00",
-                "orders_count", 30000,
-                "agent_id", 2));
-
-        var forMockList = new ArrayList<Map<String, Object>>();
-        forMockList.add(Map.of(
-                "month_begin", LocalDateTime.of(2000,3,4, 0,0,0),
-                "orders_count", 30000,
-                "agent_id", 2));
+        var expectedList = new ArrayList<MonthlyTotalsDTO>();
+        expectedList.add(MonthlyTotalsDTO.builder()
+                .monthBegin(LocalDateTime.of(2000, 3, 4, 0, 0,0))
+                .ordersCount(BigInteger.valueOf(30000))
+                .creditLimit(BigDecimal.valueOf(11000*100,2)).build());
 
         given(cardOrderService.monthlyTotals(fromDate, toDate, currency))
-                .willReturn(forMockList);
+                .willReturn(expectedList);
         // when
         var resultActions = mockMvc.perform(
                 get("/card-order/monthly-totals")
@@ -347,9 +344,9 @@ class CardOrderControllerTest {
 
         var result = resultActions.andReturn();
 
-        List<Map<String, Object>> actualList = objectMapper.readValue(
+        List<MonthlyTotalsDTO> actualList = objectMapper.readValue(
                 result.getResponse().getContentAsString(),
-                    new TypeReference<List<Map<String, Object>>>() {});
+                    new TypeReference<List<MonthlyTotalsDTO>>() {});
 
         assertThat(actualList.size()).isEqualTo(expectedList.size());
         assertThat(actualList).isEqualTo(expectedList);

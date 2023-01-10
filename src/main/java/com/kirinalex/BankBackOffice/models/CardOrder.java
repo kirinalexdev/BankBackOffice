@@ -2,18 +2,33 @@ package com.kirinalex.BankBackOffice.models;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import com.kirinalex.BankBackOffice.dto.MonthlyTotalsDTO;
+import com.kirinalex.BankBackOffice.dto.TopAgentsByOrdersDTO;
 import lombok.*;
-import org.joda.time.DateTime;
 
 import javax.persistence.*;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.math.BigDecimal;
-import java.time.LocalDate;
+import java.math.BigInteger;
 import java.time.LocalDateTime;
-import java.util.Calendar;
-import java.util.Date;
+
+@SqlResultSetMapping(name = "MonthlyTotalsMapping",
+        classes = {@ConstructorResult(targetClass = MonthlyTotalsDTO.class,
+            columns = {
+                @ColumnResult(name = "month_begin", type = LocalDateTime.class),
+                @ColumnResult(name = "orders_count", type = BigInteger.class),
+                @ColumnResult(name = "credit_limit_sum", type = BigDecimal.class)})})
+
+@SqlResultSetMapping(name = "TopAgentsByOrdersCountMapping",
+        classes = {@ConstructorResult(targetClass = TopAgentsByOrdersDTO.class,
+            columns = {
+                @ColumnResult(name = "orders_count", type = BigInteger.class),
+                @ColumnResult(name = "credit_limit_sum", type = BigDecimal.class),
+                @ColumnResult(name = "agent_id", type = Integer.class),
+                @ColumnResult(name = "first_name", type = String.class),
+                @ColumnResult(name = "last_name", type = String.class)})})
 
 @Entity
 @Table(name = "card_order")

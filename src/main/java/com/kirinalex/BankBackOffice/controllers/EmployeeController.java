@@ -2,15 +2,17 @@ package com.kirinalex.BankBackOffice.controllers;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.kirinalex.BankBackOffice.dto.CardOrderDTO;
 import com.kirinalex.BankBackOffice.dto.EmployeeDTO;
 import com.kirinalex.BankBackOffice.models.Employee;
 import com.kirinalex.BankBackOffice.services.EmployeeService;
 import com.kirinalex.BankBackOffice.utils.BadRequestException;
 import com.kirinalex.BankBackOffice.utils.ErrorResponse;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import lombok.*;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
@@ -25,14 +27,16 @@ import java.net.URISyntaxException;
 import static com.kirinalex.BankBackOffice.utils.ErrorsUtil.generateErrorMessage;
 
 @RestController
-@RequestMapping("/employee")
+@RequestMapping(value = "/employee", produces = "application/json") // produces для swagger
 @Setter
 @AllArgsConstructor
 @Slf4j
+@Api(value = "EmployeeController")
 public class EmployeeController {
     private EmployeeService employeeService;
     private ModelMapper employeeModelMapper;
 
+    @ApiOperation(value = "Добавление сотрудника")
     @PostMapping
     public ResponseEntity<Object> create(@RequestBody @Valid EmployeeDTO employeeDTO,
                        BindingResult bindingResult) throws BadRequestException, JsonProcessingException, URISyntaxException {
@@ -49,6 +53,7 @@ public class EmployeeController {
     }
 
     @PutMapping
+    @ApiOperation(value = "Изменение данных сотрудника")
     public ResponseEntity<Object> update(@RequestBody @Valid EmployeeDTO employeeDTO,
                                          BindingResult bindingResult,
                                          HttpServletRequest httpRequest) throws BadRequestException, JsonProcessingException {
@@ -74,6 +79,7 @@ public class EmployeeController {
     }
 
     @DeleteMapping
+    @ApiOperation(value = "Удаление сотрудника")
     public ResponseEntity<Object> delete(@RequestParam int id, HttpServletRequest httpRequest) {
         var employee = employeeService.findById(id).orElse(null);
 
@@ -86,7 +92,8 @@ public class EmployeeController {
     }
 
     @GetMapping
-    public ResponseEntity<Object>  findById(@RequestParam int id,
+    @ApiOperation(value = "Получение сотрудника", response = EmployeeDTO.class)
+    public ResponseEntity<Object> findById(@RequestParam int id,
                                            HttpServletRequest httpRequest) {
         var employee = employeeService.findById(id).orElse(null);
 

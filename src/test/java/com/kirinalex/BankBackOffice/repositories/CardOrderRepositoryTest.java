@@ -1,6 +1,9 @@
 package com.kirinalex.BankBackOffice.repositories;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.kirinalex.BankBackOffice.dao.CardOrderDAO;
+import com.kirinalex.BankBackOffice.dto.MonthlyTotalsDTO;
+import com.kirinalex.BankBackOffice.dto.TopAgentsByOrdersDTO;
 import com.kirinalex.BankBackOffice.models.CardOrder;
 import com.kirinalex.BankBackOffice.models.Employee;
 import org.junit.jupiter.api.Test;
@@ -8,22 +11,20 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.Import;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
-import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 @DataJpaTest
+@Import(CardOrderDAO.class)
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
-// Тестирум на постгре а не на H2, т.к. при  H2 возникают ошибки создания таблицы Contacts,
+// Тестируeм на постгре а не на H2, т.к. при H2 возникают ошибки создания таблицы Contacts,
 // а также при выполнении monthlyTotals возникает ошибка Value too long for column "NUMERIC"
 class CardOrderRepositoryTest {
 
@@ -32,6 +33,9 @@ class CardOrderRepositoryTest {
 
     @Autowired
     private EmployeeRepository employeeRepository;
+
+    @Autowired
+    private CardOrderDAO cardOrderDAO;
 
     @MockBean
     private ObjectMapper objectMapper;
@@ -50,25 +54,23 @@ class CardOrderRepositoryTest {
         createCardOrder(fromDate.minusNanos(1000), 10, agent, client); // до периода
         createCardOrder(toDate.plusNanos(1000), 20, agent, client);    // после периода
 
-        var expectedList = new ArrayList<Map<String, Object>>();
-        expectedList.add(Map.of(
-                "month_begin", Timestamp.valueOf(LocalDateTime.of(2000, 2, 1, 0, 0,0)),
-                "orders_count", BigInteger.valueOf(2),
-                "credit_limit_sum", BigDecimal.valueOf(11000*100,2)));
+        var expectedList = new ArrayList<MonthlyTotalsDTO>();
+        expectedList.add(MonthlyTotalsDTO.builder()
+                        .monthBegin(LocalDateTime.of(2000, 2, 1, 0, 0,0))
+                        .ordersCount(BigInteger.valueOf(2))
+                        .creditLimit(BigDecimal.valueOf(11000*100,2)).build());
 
-        expectedList.add(Map.of(
-                "month_begin", Timestamp.valueOf(LocalDateTime.of(2000, 3, 1, 0, 0,0)),
-                "orders_count", BigInteger.valueOf(1),
-                "credit_limit_sum", BigDecimal.valueOf(250*100, 2)));
+        expectedList.add(MonthlyTotalsDTO.builder()
+                        .monthBegin(LocalDateTime.of(2000, 3, 1, 0, 0,0))
+                        .ordersCount(BigInteger.valueOf(1))
+                        .creditLimit(BigDecimal.valueOf(250*100,2)).build());
 
         // when
-        var actualRawList = cardOrderRepository.monthlyTotals(fromDate, toDate, 2);
+        var actualList = cardOrderDAO.monthlyTotals(fromDate, toDate, 2);
 
         // then
-        assertThat(actualRawList.size()).isEqualTo(expectedList.size());
-
-        var actualList = convertToMapList(actualRawList);
-        assertThat(actualList).isEqualTo(expectedList);
+       assertThat(actualList.size()).isEqualTo(expectedList.size());
+       assertThat(actualList).isEqualTo(expectedList);
     }
 
     @Test
@@ -98,35 +100,34 @@ class CardOrderRepositoryTest {
         createCardOrder(fromDate, 100, agent4, client);
         createCardOrder(fromDate, 100, agent4, client);
 
-        var expectedList = new ArrayList<Map<String, Object>>();
-        expectedList.add(Map.of(
-                "orders_count", BigInteger.valueOf(4),
-                "credit_limit_sum", BigDecimal.valueOf(400*100, 2),
-                "agent_id", agent2.getId(),
-                "first_name", "firstName",
-                "last_name", "lastName"));
+        var expectedList = new ArrayList<TopAgentsByOrdersDTO>();
+        expectedList.add(TopAgentsByOrdersDTO.builder()
+                        .ordersCount(BigInteger.valueOf(4))
+                        .creditLimitSum(BigDecimal.valueOf(400*100, 2))
+                        .agentId(agent2.getId())
+                        .firstName("firstName")
+                        .lastName("lastName").build());
 
-        expectedList.add(Map.of(
-                "orders_count", BigInteger.valueOf(3),
-                "credit_limit_sum", BigDecimal.valueOf(300*100, 2),
-                "agent_id", agent4.getId(),
-                "first_name", "firstName",
-                "last_name", "lastName"));
+        expectedList.add(TopAgentsByOrdersDTO.builder()
+                        .ordersCount(BigInteger.valueOf(3))
+                        .creditLimitSum(BigDecimal.valueOf(300*100, 2))
+                        .agentId(agent4.getId())
+                        .firstName("firstName")
+                        .lastName("lastName").build());
 
-        expectedList.add(Map.of(
-                "orders_count", BigInteger.valueOf(2),
-                "credit_limit_sum", BigDecimal.valueOf(200*100, 2),
-                "agent_id", agent1.getId(),
-                "first_name", "firstName",
-                "last_name", "lastName"));
+        expectedList.add(TopAgentsByOrdersDTO.builder()
+                        .ordersCount(BigInteger.valueOf(2))
+                        .creditLimitSum(BigDecimal.valueOf(200*100, 2))
+                        .agentId(agent1.getId())
+                        .firstName("firstName")
+                        .lastName("lastName").build());
 
         // when
-        var actualRawList = cardOrderRepository.topAgentsByOrdersCount(fromDate, toDate);
+        var actualList = cardOrderDAO.topAgentsByOrdersCount(fromDate, toDate);
 
         // then
-        assertThat(actualRawList.size()).isEqualTo(expectedList.size());
+        assertThat(actualList.size()).isEqualTo(expectedList.size());
 
-        var actualList = convertToMapList(actualRawList);
         assertThat(actualList).isEqualTo(expectedList);
     }
 
@@ -151,15 +152,5 @@ class CardOrderRepositoryTest {
         employeeRepository.save(employee);
 
         return employee;
-    }
-
-    // Конвертируем в List<Map>, для возможности сравнения в assertThat с List<Map>
-    // т.к. результат выборки из репозитория имеет тип List<AbstractJpaQuery$TupleConverter$TupleBackedMap>
-    // и assertThat выдает что списки не равны
-    private List<Map<String, Object>> convertToMapList(List<Map<String, Object>> list) {
-        return list.stream().map(record -> record.entrySet().stream().collect(
-                        Collectors.toMap(e -> e.getKey(), e -> e.getValue())))
-                .collect(Collectors.toList());
-
     }
 }
