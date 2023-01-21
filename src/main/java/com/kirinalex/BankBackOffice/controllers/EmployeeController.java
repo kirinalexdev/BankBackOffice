@@ -97,7 +97,7 @@ public class EmployeeController {
                                            HttpServletRequest httpRequest) {
         var employee = employeeService.findById(id).orElse(null);
 
-        if (employee == null) {//TODO логировать? с каким уровнем?
+        if (employee == null) {
             return errorResponseNotFound(id, httpRequest);
         }
 
@@ -118,4 +118,5 @@ public class EmployeeController {
         var error =  new ErrorResponse(status, "Не найден сотрудник с id = " + idEmployee, httpRequest);
         return new ResponseEntity<>(error, status);
     }
+
 }
