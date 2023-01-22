@@ -12,13 +12,11 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-@Getter
-@Setter
+@Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
-//@ToString
 public class EmployeeDTO {
 
     private int id;
@@ -38,15 +36,4 @@ public class EmployeeDTO {
     @ApiModelProperty(example = "2021-08-20") // без этого swagger отображает сложную структуру для LocalDate
     @NotNull
     private LocalDate birthday;
-
-    @Override
-    public String toString() {
-        return "EmployeeDTO{" +
-                "id=" + id +
-                ", firstName='" + firstName + '\'' +
-                ", lastName='" + lastName + '\'' +
-                ", contacts=" + contacts +
-                ", birthday=" + birthday +
-                '}';
-    }
 }

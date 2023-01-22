@@ -62,16 +62,4 @@ public class CardOrder {
     @Size(min = 2, max = 100)
     @NotNull
     private String client;
-
-    // @ToString провоцирует бесконечную рекурсию
-    @Override
-    public String toString() {
-        return "CardOrder{" +
-                "id=" + id +
-                ", agent=" + agent +
-                ", creditLimit=" + creditLimit +
-                ", createdOn=" + createdOn +
-                ", client='" + client + '\'' +
-                '}';
-    }
 }

@@ -1,6 +1,7 @@
 package com.kirinalex.BankBackOffice.utils;
 
 import lombok.AllArgsConstructor;
+import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.http.HttpStatus;
@@ -8,9 +9,7 @@ import org.springframework.http.HttpStatus;
 import javax.servlet.http.HttpServletRequest;
 import java.sql.Timestamp;
 
-@Getter
-@Setter
-@AllArgsConstructor
+@Data
 public class ErrorResponse {
 
     private Timestamp timestamp;

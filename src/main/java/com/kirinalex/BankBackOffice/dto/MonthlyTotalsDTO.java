@@ -7,12 +7,10 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.time.LocalDateTime;
 
-@Getter
-@Setter
-@NoArgsConstructor
+@Data
 @Builder
+@NoArgsConstructor
 @AllArgsConstructor // нужно для @Builder
-@EqualsAndHashCode
 public class MonthlyTotalsDTO {
 
     @ApiModelProperty(example = "2021-08-20T00:00:00") // без этого swagger отображает сложную структуру для LocalDateTime

@@ -12,12 +12,11 @@ import java.util.Objects;
 
 @Entity
 @Table(name = "contact")
-@Getter
-@Setter
+@Data
 @Builder
+@ToString(exclude = "employee") // exclude - исключаем бесконечную рекурсию
 @AllArgsConstructor // нужно для @Builder
 @NoArgsConstructor
-@ToString(exclude = "employee") // exclude - исключаем бесконечную рекурсию
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class Contact {
 

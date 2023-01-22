@@ -5,11 +5,8 @@ import lombok.*;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 
-@Getter
-@Setter
-@NoArgsConstructor
+@Data
 @Builder
-@EqualsAndHashCode
 public class TopAgentsByOrdersDTO {
 
     private BigInteger ordersCount;

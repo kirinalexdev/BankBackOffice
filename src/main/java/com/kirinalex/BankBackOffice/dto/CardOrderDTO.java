@@ -9,12 +9,10 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.math.BigDecimal;
 
-@Getter
-@Setter
+@Data
 @Builder
-@AllArgsConstructor // нужно для @Builder
+@AllArgsConstructor
 @NoArgsConstructor
-@EqualsAndHashCode
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class CardOrderDTO {
 

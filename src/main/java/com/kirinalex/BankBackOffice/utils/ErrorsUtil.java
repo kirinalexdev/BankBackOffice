@@ -30,12 +30,4 @@ public class ErrorsUtil {
             throw new BadRequestException(message);
         }
     }
-
-//    public static ResponseEntity<Object> errorResponseNotFound(String message, HttpServletRequest httpRequest){
-//        var status = HttpStatus.NOT_FOUND;
-//        var error =  new ErrorResponse(status, message, httpRequest);
-//        return ResponseEntity
-//                .status(status)
-//                .body(error);
-//    }
 }
