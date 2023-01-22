@@ -40,7 +40,6 @@ public class CardOrderController  {
 
     private final CardOrderService cardOrderService;
     private final ModelMapper employeeModelMapper;
-    private final ObjectMapper objectMapper;
 
     @PostMapping
     @ApiOperation(value = "Добавление заявки")

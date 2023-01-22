@@ -19,13 +19,13 @@ public class SwaggerConfig {
 
     private static final String SWAGGER_API_VERSION = "1.0";
     private static final String LICENSE_TEXT = "License";
-    private static final String title = "Bank REST API";
-    private static final String description = "RESTful API for Bank";
+    private static final String TITLE = "Bank REST API";
+    private static final String DESCRIPTION = "RESTful API for Bank";
 
     private ApiInfo apiInfo() {
         return new ApiInfoBuilder()
-                .title(title)
-                .description(description)
+                .title(TITLE)
+                .description(DESCRIPTION)
                 .license(LICENSE_TEXT)
                 .version(SWAGGER_API_VERSION)
                 .build();
