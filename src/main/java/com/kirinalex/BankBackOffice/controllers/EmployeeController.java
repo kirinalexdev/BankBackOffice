@@ -1,14 +1,11 @@
 package com.kirinalex.BankBackOffice.controllers;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.kirinalex.BankBackOffice.dto.CardOrderDTO;
 import com.kirinalex.BankBackOffice.dto.EmployeeDTO;
 import com.kirinalex.BankBackOffice.models.Employee;
 import com.kirinalex.BankBackOffice.services.EmployeeService;
 import com.kirinalex.BankBackOffice.utils.BadRequestException;
 import com.kirinalex.BankBackOffice.utils.ErrorResponse;
-import com.kirinalex.BankBackOffice.utils.ValidationMarker;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.*;
@@ -17,7 +14,6 @@ import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -33,7 +29,6 @@ import static com.kirinalex.BankBackOffice.utils.ErrorsUtil.*;
 @Setter
 @AllArgsConstructor
 @Slf4j
-@Validated
 @Api(value = "EmployeeController")
 public class EmployeeController {
 
@@ -41,7 +36,6 @@ public class EmployeeController {
     private ModelMapper employeeModelMapper;
 
     @PostMapping
-    @Validated(ValidationMarker.OnCreate.class)
     @ApiOperation(value = "Добавление сотрудника")
     public ResponseEntity<Object> create(@RequestBody @Valid EmployeeDTO employeeDTO,
                        BindingResult bindingResult) throws BadRequestException, JsonProcessingException, URISyntaxException {
@@ -58,7 +52,6 @@ public class EmployeeController {
     }
 
     @PutMapping
-    @Validated(ValidationMarker.OnUpdate.class)
     @ApiOperation(value = "Изменение данных сотрудника")
     public ResponseEntity<Object> update(@RequestBody @Valid EmployeeDTO employeeDTO,
                                          BindingResult bindingResult,

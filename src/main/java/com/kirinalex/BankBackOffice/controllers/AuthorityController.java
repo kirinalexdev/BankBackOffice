@@ -28,7 +28,6 @@ import static com.kirinalex.BankBackOffice.utils.ErrorsUtil.*;
 @RequestMapping("/authority")
 @AllArgsConstructor
 @Slf4j
-@Validated
 @Api(value = "AuthorityController")
 public class AuthorityController {
 
@@ -36,7 +35,6 @@ public class AuthorityController {
     private final AuthorityService authorityService;
 
     @PostMapping
-    @Validated(ValidationMarker.OnCreate.class)
     @ApiOperation(value = "Добавление authority")
     public ResponseEntity<Object> create(@RequestBody @Valid Authority authority,
                                                       BindingResult bindingResult) throws BadRequestException, JsonProcessingException, URISyntaxException {
@@ -51,7 +49,6 @@ public class AuthorityController {
     }
 
     @PutMapping
-    @Validated(ValidationMarker.OnUpdate.class)
     @ApiOperation(value = "Изменение authority")
     public ResponseEntity<Object> update(@RequestBody @Valid Authority authority, HttpServletRequest httpRequest,
                                                       BindingResult bindingResult) throws BadRequestException, JsonProcessingException {

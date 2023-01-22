@@ -15,7 +15,7 @@ import javax.validation.constraints.Size;
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class ContactDTO {
 
-    private Integer id;
+    private int id;
 
     @Size(min = 5, max = 100)
     @NotNull

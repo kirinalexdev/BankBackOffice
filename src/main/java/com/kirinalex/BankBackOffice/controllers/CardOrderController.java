@@ -10,7 +10,6 @@ import com.kirinalex.BankBackOffice.services.CardOrderService;
 import com.kirinalex.BankBackOffice.utils.BadRequestException;
 import com.kirinalex.BankBackOffice.utils.CurrencyRateException;
 import com.kirinalex.BankBackOffice.utils.ErrorResponse;
-import com.kirinalex.BankBackOffice.utils.ValidationMarker;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.AllArgsConstructor;
@@ -20,7 +19,6 @@ import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -37,7 +35,6 @@ import static com.kirinalex.BankBackOffice.utils.ErrorsUtil.*;
 @RequestMapping(value = "/card-order", produces = "application/json") // produces для swagger
 @AllArgsConstructor
 @Slf4j
-@Validated
 @Api(value = "CardOrderController")
 public class CardOrderController  {
 
@@ -46,7 +43,6 @@ public class CardOrderController  {
     private final ObjectMapper objectMapper;
 
     @PostMapping
-    @Validated(ValidationMarker.OnCreate.class)
     @ApiOperation(value = "Добавление заявки")
     public ResponseEntity<Object> create(@RequestBody @Valid CardOrderDTO cardOrderDTO,
                        BindingResult bindingResult) throws BadRequestException, JsonProcessingException, URISyntaxException {
@@ -62,7 +58,6 @@ public class CardOrderController  {
     }
 
     @PutMapping
-    @Validated(ValidationMarker.OnUpdate.class)
     @ApiOperation(value = "Изменение заявки")
     public ResponseEntity<Object> update(@RequestBody @Valid CardOrderDTO cardOrderDTO, HttpServletRequest httpRequest,
                        BindingResult bindingResult) throws BadRequestException, JsonProcessingException {
