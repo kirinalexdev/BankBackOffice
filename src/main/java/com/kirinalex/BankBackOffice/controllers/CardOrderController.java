@@ -49,10 +49,7 @@ public class CardOrderController  {
         checkBindingResult(bindingResult, cardOrderDTO);
         var cardOrder = employeeModelMapper.map(cardOrderDTO, CardOrder.class);
         cardOrderService.create(cardOrder);
-
-        return ResponseEntity
-                .created(new URI("/card-order/" + cardOrder.getId()))
-                .build();
+        return ResponseEntity.ok().build();
     }
 
     @PutMapping

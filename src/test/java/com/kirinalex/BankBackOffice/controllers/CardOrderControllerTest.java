@@ -67,9 +67,7 @@ class CardOrderControllerTest {
                 .content(objectMapper.writeValueAsString(cardOrderDTO)));
 
         // then
-        response.andExpect(status().isCreated())
-                .andExpect(header().exists("Location"))
-                .andExpect(header().string("Location", matchesPattern("\\/card-order\\/\\d+")));
+        response.andExpect(status().isOk());
     }
 
     @SneakyThrows
