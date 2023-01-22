@@ -1,4 +1,4 @@
-create table employee
+create table employees
 (
     id serial primary key,
     first_name varchar(255) not null,
@@ -6,23 +6,23 @@ create table employee
     birthday   timestamp    not null
 );
 
-alter table employee
+alter table employees
     owner to postgres;
 
-create table contact
+create table contacts
 (
     id  serial primary key,
     value varchar(255) not null,
     employee_id integer
         constraint fkahgr65l45anwaeoft98neymad
-            references employee,
+            references employees,
     type        varchar(10)
 );
 
-alter table contact
+alter table contacts
     owner to postgres;
 
-create table card_order
+create table card_orders
 (
     id serial primary key,
     created_on   timestamp,
@@ -30,8 +30,8 @@ create table card_order
     client       varchar(255)   not null,
     agent_id     integer        not null
         constraint fkcs5aefchaqji91dkqvnb9wgak
-            references employee
+            references employees
 );
 
-alter table card_order
+alter table card_orders
     owner to postgres;

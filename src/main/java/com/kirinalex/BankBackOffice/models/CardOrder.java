@@ -31,7 +31,7 @@ import java.time.LocalDateTime;
                 @ColumnResult(name = "last_name", type = String.class)})})
 
 @Entity
-@Table(name = "card_order")
+@Table(name = "card_orders")
 @Getter
 @Setter
 @Builder

@@ -31,7 +31,7 @@ public class CardOrderDAO {
             CAST(SUM(c.credit_limit) / :currencyRate AS NUMERIC(15,2)) credit_limit_sum,
             COUNT(c.id) orders_count
         FROM
-            card_order c
+            card_orders c
         WHERE
             c.created_on BETWEEN :fromDate AND :toDate
         GROUP BY
@@ -54,15 +54,15 @@ public class CardOrderDAO {
             counts.orders_count,
             counts.credit_limit_sum,
             counts.agent_id,
-            employee.first_name,
-            employee.last_name
+            employees.first_name,
+            employees.last_name
         FROM 
             (SELECT 
                 COUNT(c.id) orders_count,
                 SUM(c.credit_limit) credit_limit_sum,
                 c.agent_id
             FROM 
-                card_order c
+                card_orders c
             WHERE 
                 c.created_on BETWEEN :fromDate AND :toDate
             GROUP BY 
@@ -70,8 +70,8 @@ public class CardOrderDAO {
             ORDER BY 
                 orders_count DESC
             LIMIT 3) counts
-        LEFT JOIN employee 
-            ON counts.agent_id = employee.id
+        LEFT JOIN employees 
+            ON counts.agent_id = employees.id
         ORDER BY 
             orders_count DESC""", "TopAgentsByOrdersCountMapping");
 

@@ -11,7 +11,7 @@ import javax.validation.constraints.Size;
 import java.util.Objects;
 
 @Entity
-@Table(name = "contact")
+@Table(name = "contacts")
 @Data
 @Builder
 @ToString(exclude = "employee") // exclude - исключаем бесконечную рекурсию
