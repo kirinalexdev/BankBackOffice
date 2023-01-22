@@ -1,14 +1,11 @@
 package com.kirinalex.BankBackOffice.utils;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.kirinalex.BankBackOffice.dto.EmployeeDTO;
+import com.kirinalex.BankBackOffice.exceptions.BadRequestException;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 @Slf4j

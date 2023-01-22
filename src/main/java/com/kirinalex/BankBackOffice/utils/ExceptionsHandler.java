@@ -1,5 +1,8 @@
 package com.kirinalex.BankBackOffice.utils;
 
+import com.kirinalex.BankBackOffice.exceptions.BadRequestException;
+import com.kirinalex.BankBackOffice.exceptions.CurrencyRateException;
+import com.kirinalex.BankBackOffice.exceptions.ResourceNotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import javax.validation.ConstraintViolationException;
 import org.springframework.http.HttpStatus;
@@ -31,6 +34,13 @@ public class ExceptionsHandler extends ResponseEntityExceptionHandler {
     @ExceptionHandler(ConstraintViolationException.class)
     public ResponseEntity<ErrorResponse> constraintViolationExceptionHandler(HttpServletRequest httpRequest, ConstraintViolationException ex) {
         var status = HttpStatus.BAD_REQUEST;
+        var error = new ErrorResponse(status, ex.getMessage(), httpRequest);
+        return ResponseEntity.status(status).body(error);
+    }
+
+    @ExceptionHandler(ResourceNotFoundException.class)
+    public ResponseEntity<ErrorResponse> resourceNotFoundExceptionHandler(HttpServletRequest httpRequest, ResourceNotFoundException ex) {
+        var status = HttpStatus.NOT_FOUND;
         var error = new ErrorResponse(status, ex.getMessage(), httpRequest);
         return ResponseEntity.status(status).body(error);
     }

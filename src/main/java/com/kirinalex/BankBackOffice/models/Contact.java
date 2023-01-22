@@ -17,14 +17,14 @@ import java.util.Objects;
 @Builder
 @AllArgsConstructor // нужно для @Builder
 @NoArgsConstructor
-@ToString
+@ToString(exclude = "employee") // exclude - исключаем бесконечную рекурсию
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class Contact {
 
     @Id
     @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private int id;
 
     @Column(name = "value", length = 100, nullable = false)
     @Size(min = 5, max = 100)

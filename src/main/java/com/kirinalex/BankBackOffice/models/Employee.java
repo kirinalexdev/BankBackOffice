@@ -21,7 +21,7 @@ import java.util.*;
 @Builder
 @AllArgsConstructor // нужно для @Builder
 @NoArgsConstructor
-@ToString
+@ToString(exclude = "contacts") // exclude - исключаем бесконечную рекурсию
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class Employee {
 

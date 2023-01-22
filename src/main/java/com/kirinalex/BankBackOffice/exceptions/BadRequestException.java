@@ -1,4 +1,4 @@
-package com.kirinalex.BankBackOffice.utils;
+package com.kirinalex.BankBackOffice.exceptions;
 
 import lombok.Getter;
 

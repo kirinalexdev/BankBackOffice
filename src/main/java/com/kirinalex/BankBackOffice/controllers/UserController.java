@@ -1,10 +1,10 @@
 package com.kirinalex.BankBackOffice.controllers;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.kirinalex.BankBackOffice.exceptions.ResourceNotFoundException;
 import com.kirinalex.BankBackOffice.models.User;
 import com.kirinalex.BankBackOffice.services.UserService;
-import com.kirinalex.BankBackOffice.utils.BadRequestException;
-import com.kirinalex.BankBackOffice.utils.ErrorResponse;
+import com.kirinalex.BankBackOffice.exceptions.BadRequestException;
 import com.kirinalex.BankBackOffice.utils.UserValidator;
 //import com.kirinalex.BankBackOffice.utils.UserValidator2;
 import io.swagger.annotations.Api;
@@ -41,7 +41,6 @@ public class UserController {
                                                       BindingResult bindingResult) throws BadRequestException, JsonProcessingException, URISyntaxException {
         userValidator.validate(user, bindingResult);
         checkBindingResult(bindingResult, user);
-
         userService.save(user);
 
         return ResponseEntity
@@ -52,29 +51,17 @@ public class UserController {
     @PutMapping
     @ApiOperation(value = "Изменение пользователя")
     public ResponseEntity<Object> update(@RequestBody @Valid User user, HttpServletRequest httpRequest,
-                                                      BindingResult bindingResult) throws BadRequestException, JsonProcessingException {
+                                                      BindingResult bindingResult) throws BadRequestException, JsonProcessingException, ResourceNotFoundException {
         checkBindingResult(bindingResult, user);
-
-        var id = user.getId();
-        var foundUser = userService.findById(id).orElse(null);
-
-        if (foundUser == null) {
-            return errorResponseNotFound(id, httpRequest);
-        }
-
+        findUserOrElseThrow(user.getId());
         userService.save(user);
         return ResponseEntity.ok().build();
     }
 
     @DeleteMapping
     @ApiOperation(value = "Удаление пользователя")
-    public ResponseEntity<Object> delete(@RequestParam int id, HttpServletRequest httpRequest) {
-        var user = userService.findById(id).orElse(null);
-
-        if (user == null) {
-            return errorResponseNotFound(id, httpRequest);
-        }
-
+    public ResponseEntity<Object> delete(@RequestParam int id, HttpServletRequest httpRequest) throws ResourceNotFoundException {
+        findUserOrElseThrow(id);
         userService.delete(id);
         return ResponseEntity.ok().build();
     }
@@ -82,19 +69,13 @@ public class UserController {
     @GetMapping
     @ApiOperation(value = "Получение пользователя", response = User.class)
     public ResponseEntity<Object> findById(@RequestParam int id,
-                                           HttpServletRequest httpRequest) {
-        var user = userService.findById(id).orElse(null);
-
-        if (user == null) {
-            return errorResponseNotFound(id, httpRequest);
-        }
-
+                                           HttpServletRequest httpRequest) throws ResourceNotFoundException {
+        var user = findUserOrElseThrow(id);
         return ResponseEntity.status(HttpStatus.OK).body(user);
     }
 
-    private ResponseEntity<Object> errorResponseNotFound(int idUser, HttpServletRequest httpRequest){
-        var status = HttpStatus.NOT_FOUND;
-        var error =  new ErrorResponse(status, "Не найден пользователь с id = " + idUser, httpRequest);
-        return ResponseEntity.status(status).body(error);
+    private User findUserOrElseThrow(int id) throws ResourceNotFoundException {
+        return userService.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Не найден пользователь по id = " + id));
     }
 }

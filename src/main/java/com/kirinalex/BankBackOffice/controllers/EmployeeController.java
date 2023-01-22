@@ -2,16 +2,15 @@ package com.kirinalex.BankBackOffice.controllers;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.kirinalex.BankBackOffice.dto.EmployeeDTO;
+import com.kirinalex.BankBackOffice.exceptions.ResourceNotFoundException;
 import com.kirinalex.BankBackOffice.models.Employee;
 import com.kirinalex.BankBackOffice.services.EmployeeService;
-import com.kirinalex.BankBackOffice.utils.BadRequestException;
-import com.kirinalex.BankBackOffice.utils.ErrorResponse;
+import com.kirinalex.BankBackOffice.exceptions.BadRequestException;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.*;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
@@ -39,36 +38,25 @@ public class EmployeeController {
     @ApiOperation(value = "Добавление сотрудника")
     public ResponseEntity<Object> create(@RequestBody @Valid EmployeeDTO employeeDTO,
                        BindingResult bindingResult) throws BadRequestException, JsonProcessingException, URISyntaxException {
-
         checkBindingResult(bindingResult, employeeDTO);
-
         var employee = employeeModelMapper.map(employeeDTO, Employee.class);
         employeeService.save(employee);
 
         return ResponseEntity
                 .created(new URI("/employee/" + employee.getId()))
                 .build();
-
     }
 
     @PutMapping
     @ApiOperation(value = "Изменение данных сотрудника")
     public ResponseEntity<Object> update(@RequestBody @Valid EmployeeDTO employeeDTO,
                                          BindingResult bindingResult,
-                                         HttpServletRequest httpRequest) throws BadRequestException, JsonProcessingException {
+                                         HttpServletRequest httpRequest) throws BadRequestException, JsonProcessingException, ResourceNotFoundException {
 
         checkBindingResult(bindingResult, employeeDTO);
-
-        var id = employeeDTO.getId();
-        var employee = employeeService.findById(id).orElse(null);
-
-        if (employee == null) {
-            return errorResponseNotFound(id, httpRequest);
-        }
-
+        var employee = findEmployeeOrElseThrow(employeeDTO.getId());
         employeeModelMapper.map(employeeDTO, employee);
         employeeService.save(employee);
-
         return ResponseEntity.ok().build();
 
         // TODO Сделать возможность удаления контактов. Сейчас же используется версия 2.1.1 ModelMapper,
@@ -79,13 +67,8 @@ public class EmployeeController {
 
     @DeleteMapping
     @ApiOperation(value = "Удаление сотрудника")
-    public ResponseEntity<Object> delete(@RequestParam int id, HttpServletRequest httpRequest) {
-        var employee = employeeService.findById(id).orElse(null);
-
-        if (employee == null) {
-            return errorResponseNotFound(id, httpRequest);
-        }
-
+    public ResponseEntity<Object> delete(@RequestParam int id, HttpServletRequest httpRequest) throws ResourceNotFoundException {
+        findEmployeeOrElseThrow(id);
         employeeService.delete(id);
         return ResponseEntity.ok().build();
     }
@@ -93,21 +76,14 @@ public class EmployeeController {
     @GetMapping
     @ApiOperation(value = "Получение сотрудника", response = EmployeeDTO.class)
     public ResponseEntity<Object> findById(@RequestParam int id,
-                                           HttpServletRequest httpRequest) {
-        var employee = employeeService.findById(id).orElse(null);
-
-        if (employee == null) {
-            return errorResponseNotFound(id, httpRequest);
-        }
-
+                                           HttpServletRequest httpRequest) throws ResourceNotFoundException {
+        var employee = findEmployeeOrElseThrow(id);
         var employeeDTO= employeeModelMapper.map(employee, EmployeeDTO.class);
         return ResponseEntity.ok(employeeDTO);
     }
 
-    private ResponseEntity<Object> errorResponseNotFound(int idEmployee, HttpServletRequest httpRequest){
-        var status = HttpStatus.NOT_FOUND;
-        var error =  new ErrorResponse(status, "Не найден сотрудник с id = " + idEmployee, httpRequest);
-        return ResponseEntity.status(status).body(error);
+    private Employee findEmployeeOrElseThrow(int id) throws ResourceNotFoundException {
+        return employeeService.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Не найден сотрудник по id = " + id));
     }
-
 }

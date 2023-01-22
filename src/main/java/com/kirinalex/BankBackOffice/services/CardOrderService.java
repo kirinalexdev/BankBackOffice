@@ -7,7 +7,7 @@ import com.kirinalex.BankBackOffice.kafka.KafkaProducer;
 import com.kirinalex.BankBackOffice.models.CardOrder;
 import com.kirinalex.BankBackOffice.repositories.CardOrderRepository;
 import com.kirinalex.BankBackOffice.finance.Currency;
-import com.kirinalex.BankBackOffice.utils.CurrencyRateException;
+import com.kirinalex.BankBackOffice.exceptions.CurrencyRateException;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

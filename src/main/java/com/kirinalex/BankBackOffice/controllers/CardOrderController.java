@@ -5,11 +5,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.kirinalex.BankBackOffice.dto.CardOrderDTO;
 import com.kirinalex.BankBackOffice.dto.MonthlyTotalsDTO;
 import com.kirinalex.BankBackOffice.dto.TopAgentsByOrdersDTO;
+import com.kirinalex.BankBackOffice.exceptions.ResourceNotFoundException;
 import com.kirinalex.BankBackOffice.models.CardOrder;
 import com.kirinalex.BankBackOffice.services.CardOrderService;
-import com.kirinalex.BankBackOffice.utils.BadRequestException;
-import com.kirinalex.BankBackOffice.utils.CurrencyRateException;
-import com.kirinalex.BankBackOffice.utils.ErrorResponse;
+import com.kirinalex.BankBackOffice.exceptions.BadRequestException;
+import com.kirinalex.BankBackOffice.exceptions.CurrencyRateException;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.AllArgsConstructor;
@@ -46,9 +46,7 @@ public class CardOrderController  {
     @ApiOperation(value = "Добавление заявки")
     public ResponseEntity<Object> create(@RequestBody @Valid CardOrderDTO cardOrderDTO,
                        BindingResult bindingResult) throws BadRequestException, JsonProcessingException, URISyntaxException {
-
         checkBindingResult(bindingResult, cardOrderDTO);
-
         var cardOrder = employeeModelMapper.map(cardOrderDTO, CardOrder.class);
         cardOrderService.create(cardOrder);
 
@@ -60,17 +58,9 @@ public class CardOrderController  {
     @PutMapping
     @ApiOperation(value = "Изменение заявки")
     public ResponseEntity<Object> update(@RequestBody @Valid CardOrderDTO cardOrderDTO, HttpServletRequest httpRequest,
-                       BindingResult bindingResult) throws BadRequestException, JsonProcessingException {
-
+                       BindingResult bindingResult) throws BadRequestException, JsonProcessingException, ResourceNotFoundException {
         checkBindingResult(bindingResult, cardOrderDTO);
-
-        var id = cardOrderDTO.getId();
-        var cardOrder = cardOrderService.findById(id).orElse(null);
-
-        if (cardOrder == null) {
-            return errorResponseNotFound(id, httpRequest);
-        }
-
+        var cardOrder = findCardOrderOrElseThrow(cardOrderDTO.getId());
         employeeModelMapper.map(cardOrderDTO, cardOrder);
         cardOrderService.update(cardOrder);
 
@@ -79,25 +69,16 @@ public class CardOrderController  {
 
     @DeleteMapping
     @ApiOperation(value = "Удаление заявки")
-    public ResponseEntity<Object> delete(@RequestParam int id, HttpServletRequest httpRequest) {
-        var cardOrder = cardOrderService.findById(id).orElse(null);
-
-        if (cardOrder == null) {
-            return errorResponseNotFound(id, httpRequest);
-        }
+    public ResponseEntity<Object> delete(@RequestParam int id, HttpServletRequest httpRequest) throws ResourceNotFoundException {
+        findCardOrderOrElseThrow(id);
         cardOrderService.delete(id);
         return ResponseEntity.ok().build();
     }
 
     @GetMapping
     @ApiOperation(value = "Получение заявки", response = CardOrderDTO.class)
-    public ResponseEntity<Object> findbyid(@RequestParam int id, HttpServletRequest httpRequest) {
-        var cardOrder = cardOrderService.findById(id).orElse(null);
-
-        if (cardOrder == null) {
-            return errorResponseNotFound(id, httpRequest);
-        }
-
+    public ResponseEntity<Object> findbyid(@RequestParam int id, HttpServletRequest httpRequest) throws ResourceNotFoundException {
+        var cardOrder = findCardOrderOrElseThrow(id);
         var cardOrderDTO= employeeModelMapper.map(cardOrder, CardOrderDTO.class);
         return ResponseEntity.status(HttpStatus.OK).body(cardOrderDTO);
     }
@@ -127,10 +108,8 @@ public class CardOrderController  {
         return cardOrderService.monthlyTotals(fromDate, toDate, currency);
     }
 
-    private ResponseEntity<Object> errorResponseNotFound(int idCardOrder, HttpServletRequest httpRequest){
-        var status = HttpStatus.NOT_FOUND;
-        var error =  new ErrorResponse(status, "Не найдена заявка с id = " + idCardOrder, httpRequest);
-        return ResponseEntity.status(status).body(error);
+    private CardOrder findCardOrderOrElseThrow(int id) throws ResourceNotFoundException {
+        return cardOrderService.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Не найдена заявка по id = " + id));
     }
-
 }

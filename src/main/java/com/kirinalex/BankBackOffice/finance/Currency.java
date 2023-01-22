@@ -3,16 +3,13 @@ package com.kirinalex.BankBackOffice.finance;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.kirinalex.BankBackOffice.utils.CurrencyRateException;
+import com.kirinalex.BankBackOffice.exceptions.CurrencyRateException;
 import lombok.extern.slf4j.Slf4j;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.HashMap;
-import java.util.Map;
 
 @Slf4j
 public class Currency {
