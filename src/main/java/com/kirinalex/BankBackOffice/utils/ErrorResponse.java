@@ -23,6 +23,6 @@ public class ErrorResponse {
         this.status = httpStatus.value();
         this.error = httpStatus.getReasonPhrase();
         this.message = message;
-        this.path = httpRequest.getRequestURI(); // TODO сюда передавать только URI, без httpRequest?
+        this.path = httpRequest.getRequestURI();
     }
 }

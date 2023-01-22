@@ -22,12 +22,10 @@ public class AuthorityValidator implements Validator {
 
     @Override
     public void validate(Object target, Errors errors) {
-        var authority = (Authority) target; // todo лишняя переменная
-        var name = authority.getName();
+        var name = ((Authority) target).getName();
         var optionalAuthority = authorityRepository.findByName(name);
 
-        // todo педелелать на isPresent
-        if (!optionalAuthority.isEmpty()) {
+        if (optionalAuthority.isPresent()) {
             errors.rejectValue("name", "", "Authority " + name + " уже существует");
         }
     }

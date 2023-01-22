@@ -15,8 +15,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 import java.util.*;
 
-// TODO все изменения БД сделать через кафку?
-
 @Service
 @AllArgsConstructor
 @Transactional(readOnly = true)

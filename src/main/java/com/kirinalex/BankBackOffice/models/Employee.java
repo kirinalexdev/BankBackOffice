@@ -41,7 +41,7 @@ public class Employee {
     private String lastName;
 
     @OneToMany(mappedBy = "employee", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Contact> contacts = new ArrayList<>(); // TODO вероятно создание отсюда нужно убрать
+    private List<Contact> contacts = new ArrayList<>();
 
     @Column(name = "birthday", nullable = false)
     @DateTimeFormat(pattern = "yyyy-MM-dd")

@@ -20,14 +20,11 @@ public class UserValidator implements Validator {
 
     @Override
     public void validate(Object target, Errors errors) {
-        var user = (User) target; // todo лишняя переменная
-        var username = user.getUsername();
+        var username = ((User) target).getUsername();
         var optionalUser = userRepository.findByUsername(username);
 
-        // todo педелелать на isPresent
-        if (!optionalUser.isEmpty()) {
+        if (optionalUser.isPresent()) {
             errors.rejectValue("username", "", "Пользователь "+ username +" уже существует");
         }
-
     }
 }
