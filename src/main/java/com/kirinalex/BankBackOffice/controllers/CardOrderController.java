@@ -32,7 +32,7 @@ import java.util.stream.Collectors;
 import static com.kirinalex.BankBackOffice.utils.ErrorsUtil.*;
 
 @RestController
-@RequestMapping(value = "/card-order", produces = "application/json") // produces для swagger
+@RequestMapping(value = "/v1/card-order", produces = "application/json") // produces для swagger
 @AllArgsConstructor
 @Slf4j
 @Api(value = "CardOrderController")

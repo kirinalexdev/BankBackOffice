@@ -81,8 +81,9 @@
 			<artifactId>flyway-core</artifactId>
 		</dependency>
 
-<!--		Failed to start bean 'documentationPluginsBootstrapper'; nested exception is java.lang.NullPointerException: Cannot invoke "org.springframework.web.servlet.mvc.condition.PatternsRequestCondition.getPatterns()" because "this.condition" is null-->
-<!--	TODO поднять версию?	-->
+		<!-- Низкая версия, которая гарантированно не дает ошибку:		-->
+		<!-- Failed to start bean 'documentationPluginsBootstrapper'; nested exception is java.lang.NullPointerException: Cannot invoke "org.springframework.web.servlet.mvc.condition.PatternsRequestCondition.getPatterns()" because "this.condition" is null-->
+		<!-- в сочетании с spring.mvc.pathmatch.matching-strategy в application.properties	-->
 		<dependency>
 			<groupId>io.springfox</groupId>
 			<artifactId>springfox-swagger-ui</artifactId>

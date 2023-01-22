@@ -23,7 +23,7 @@ import java.net.URISyntaxException;
 import static com.kirinalex.BankBackOffice.utils.ErrorsUtil.*;
 
 @Controller
-@RequestMapping("/authority")
+@RequestMapping("/v1/authority")
 @AllArgsConstructor
 @Slf4j
 @Api(value = "AuthorityController")

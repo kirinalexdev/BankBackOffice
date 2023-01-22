@@ -26,7 +26,7 @@ import java.net.URISyntaxException;
 import static com.kirinalex.BankBackOffice.utils.ErrorsUtil.*;
 
 @Controller
-@RequestMapping("/user")
+@RequestMapping("/v1/user")
 @AllArgsConstructor
 @Slf4j
 @Api(value = "UserController")

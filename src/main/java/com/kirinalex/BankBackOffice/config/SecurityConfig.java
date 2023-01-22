@@ -27,10 +27,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             .antMatchers("/user", "/authority")
                 .hasRole("ADMIN")
 
-            .antMatchers("/card-order")
+            .antMatchers("/v1/card-order")
                 .hasAnyRole("AGENT", "MANAGER")
 
-            .antMatchers("/card-order/**", "/employee")
+            .antMatchers("v1/card-order/**", "/v1/employee")
                 .hasRole("MANAGER")
 
             .anyRequest().authenticated()

@@ -24,7 +24,7 @@ import java.net.URISyntaxException;
 import static com.kirinalex.BankBackOffice.utils.ErrorsUtil.*;
 
 @RestController
-@RequestMapping(value = "/employee", produces = "application/json") // produces для swagger
+@RequestMapping(value = "/v1/employee", produces = "application/json") // produces для swagger
 @Setter
 @AllArgsConstructor
 @Slf4j
@@ -43,7 +43,7 @@ public class EmployeeController {
         employeeService.save(employee);
 
         return ResponseEntity
-                .created(new URI("/employee/" + employee.getId()))
+                .created(new URI("/v1/employee/" + employee.getId()))
                 .build();
     }
 

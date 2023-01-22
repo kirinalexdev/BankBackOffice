@@ -62,7 +62,7 @@ class CardOrderControllerTest {
         var cardOrderDTO = cardOrderDTO();
 
         // when
-        var response = mockMvc.perform(post("/card-order")
+        var response = mockMvc.perform(post("/v1/card-order")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(cardOrderDTO)));
 
@@ -77,7 +77,7 @@ class CardOrderControllerTest {
         var cardOrderDTO = incorrectCardOrderDTO();
 
         // when
-        var response = mockMvc.perform(post("/card-order")
+        var response = mockMvc.perform(post("/v1/card-order")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(cardOrderDTO)));
 
@@ -98,7 +98,7 @@ class CardOrderControllerTest {
                 .willReturn(Optional.of(new CardOrder()));
 
         // when
-        var response = mockMvc.perform(put("/card-order")
+        var response = mockMvc.perform(put("/v1/card-order")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(cardOrderDTO)));
 
@@ -115,7 +115,7 @@ class CardOrderControllerTest {
                 .willReturn(Optional.empty());
 
         // when
-        var response = mockMvc.perform(put("/card-order")
+        var response = mockMvc.perform(put("/v1/card-order")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(cardOrderDTO)));
 
@@ -132,7 +132,7 @@ class CardOrderControllerTest {
 
         // when
         var response = mockMvc.perform(
-                delete("/card-order")
+                delete("/v1/card-order")
                         .param("id", "2"));
 
         // then
@@ -148,7 +148,7 @@ class CardOrderControllerTest {
 
         // when
         var response = mockMvc.perform(
-                delete("/card-order")
+                delete("/v1/card-order")
                         .param("id", "2"));
 
         // then
@@ -183,7 +183,7 @@ class CardOrderControllerTest {
 
         // when
         var resultActions = mockMvc.perform(
-                get("/card-order")
+                get("/v1/card-order")
                         .param("id", String.valueOf(id)));
 
         var result = resultActions.andReturn();
@@ -210,7 +210,7 @@ class CardOrderControllerTest {
 
         // when
         var response = mockMvc.perform(
-                get("/card-order")
+                get("/v1/card-order")
                         .param("id", String.valueOf(cardOrderId)));
 
         // then
@@ -265,7 +265,7 @@ class CardOrderControllerTest {
 
         // when
         var resultActions = mockMvc.perform(
-                get("/card-order/find-by-created-on")
+                get("/v1/card-order/find-by-created-on")
                         .param("fromDate", fromDate.format(DateTimeFormatter.ISO_DATE_TIME))
                         .param("toDate", toDate.format(DateTimeFormatter.ISO_DATE_TIME)));
 
@@ -301,7 +301,7 @@ class CardOrderControllerTest {
                 .willReturn(expectedList);
         // when
         var resultActions = mockMvc.perform(
-                get("/card-order/top-agents-by-orders-count")
+                get("/v1/card-order/top-agents-by-orders-count")
                     .param("fromDate", fromDate.format(DateTimeFormatter.ISO_DATE_TIME))
                     .param("toDate", toDate.format(DateTimeFormatter.ISO_DATE_TIME)));
 
@@ -336,7 +336,7 @@ class CardOrderControllerTest {
                 .willReturn(expectedList);
         // when
         var resultActions = mockMvc.perform(
-                get("/card-order/monthly-totals")
+                get("/v1/card-order/monthly-totals")
                     .param("fromDate", fromDate.format(DateTimeFormatter.ISO_DATE_TIME))
                     .param("toDate", toDate.format(DateTimeFormatter.ISO_DATE_TIME))
                     .param("currency", "USD"));

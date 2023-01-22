@@ -53,14 +53,14 @@ class EmployeeControllerTest {
         var employeeDTO = employeeDTO();
 
         // when
-        var response = mockMvc.perform(post("/employee")
+        var response = mockMvc.perform(post("/v1/employee")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(employeeDTO)));
 
         // then
         response.andExpect(status().isCreated())
                 .andExpect(header().exists("Location"))
-                .andExpect(header().string("Location", matchesPattern("\\/employee\\/\\d+")));
+                .andExpect(header().string("Location", matchesPattern("\\/v1\\/employee\\/\\d+")));
     }
 
     @SneakyThrows
@@ -70,7 +70,7 @@ class EmployeeControllerTest {
         var employeeDTO = incorrectEmployeeDTO();
 
         // when
-        var response = mockMvc.perform(post("/employee")
+        var response = mockMvc.perform(post("/v1/employee")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(employeeDTO)));
 
@@ -90,7 +90,7 @@ class EmployeeControllerTest {
                 .willReturn(Optional.of(new Employee()));
 
         // when
-        var response = mockMvc.perform(put("/employee")
+        var response = mockMvc.perform(put("/v1/employee")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(employeeDTO)));
 
@@ -107,7 +107,7 @@ class EmployeeControllerTest {
                 .willReturn(Optional.empty());
 
         // when
-        var response = mockMvc.perform(put("/employee")
+        var response = mockMvc.perform(put("/v1/employee")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(employeeDTO)));
 
@@ -122,7 +122,7 @@ class EmployeeControllerTest {
         var employeeDTO = incorrectEmployeeDTO();
 
         // when
-        var response = mockMvc.perform(put("/employee")
+        var response = mockMvc.perform(put("/v1/employee")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(employeeDTO)));
 
@@ -142,7 +142,7 @@ class EmployeeControllerTest {
 
         // when
         var response = mockMvc.perform(
-                    delete("/employee")
+                    delete("/v1/employee")
                             .param("id", "2"));
 
         // then
@@ -158,7 +158,7 @@ class EmployeeControllerTest {
 
         // when
         var response = mockMvc.perform(
-                    delete("/employee")
+                    delete("/v1/employee")
                             .param("id", "2"));
 
         // then
@@ -193,7 +193,7 @@ class EmployeeControllerTest {
 
         // when
         var response = mockMvc.perform(
-                get("/employee")
+                get("/v1/employee")
                         .param("id", String.valueOf(employee.getId())));
 
         // then
@@ -215,7 +215,7 @@ class EmployeeControllerTest {
 
         // when
         var response = mockMvc.perform(
-                get("/employee")
+                get("/v1/employee")
                         .param("id", String.valueOf(employeeId)));
 
         // then
