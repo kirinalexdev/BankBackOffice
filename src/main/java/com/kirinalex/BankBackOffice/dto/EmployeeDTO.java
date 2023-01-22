@@ -2,12 +2,14 @@ package com.kirinalex.BankBackOffice.dto;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import com.kirinalex.BankBackOffice.utils.ValidationMarker;
 import io.swagger.annotations.ApiModelProperty;
 import io.swagger.annotations.ApiResponses;
 import lombok.*;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Null;
 import javax.validation.constraints.Size;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -23,7 +25,9 @@ import java.util.List;
 @ToString
 public class EmployeeDTO {
 
-    private int id;
+    @Null(groups = ValidationMarker.OnCreate.class)
+    @NotNull(groups = ValidationMarker.OnUpdate.class)
+    private Integer id;
 
     @Size(min = 2, max = 100)
     @NotNull

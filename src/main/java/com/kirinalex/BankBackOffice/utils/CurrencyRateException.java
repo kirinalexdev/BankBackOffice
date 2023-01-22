@@ -5,6 +5,7 @@ import org.springframework.http.HttpStatus;
 
 @Getter
 public class CurrencyRateException extends Exception{
+
     HttpStatus status;
 
     public CurrencyRateException(String message, HttpStatus status) {

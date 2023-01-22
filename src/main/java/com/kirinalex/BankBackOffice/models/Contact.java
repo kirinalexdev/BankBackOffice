@@ -17,6 +17,7 @@ import java.util.Objects;
 @Builder
 @AllArgsConstructor // нужно для @Builder
 @NoArgsConstructor
+@ToString
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class Contact {
 
@@ -39,14 +40,4 @@ public class Contact {
     @Enumerated(EnumType.STRING)
     @NotNull
     private ContactType type;
-
-    @Override
-    public String toString() {
-        return "Contact{" +
-                "id=" + id +
-                ", value='" + value + '\'' +
-                ", type=" + type +
-                '}';
-    }
-
 }

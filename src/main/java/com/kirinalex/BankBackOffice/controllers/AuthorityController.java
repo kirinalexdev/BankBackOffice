@@ -5,10 +5,7 @@ import com.kirinalex.BankBackOffice.models.Authority;
 import com.kirinalex.BankBackOffice.models.User;
 import com.kirinalex.BankBackOffice.services.AuthorityService;
 import com.kirinalex.BankBackOffice.services.UserService;
-import com.kirinalex.BankBackOffice.utils.AuthorityValidator;
-import com.kirinalex.BankBackOffice.utils.BadRequestException;
-import com.kirinalex.BankBackOffice.utils.ErrorResponse;
-import com.kirinalex.BankBackOffice.utils.UserValidator;
+import com.kirinalex.BankBackOffice.utils.*;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.AllArgsConstructor;
@@ -17,6 +14,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -24,12 +22,13 @@ import javax.validation.Valid;
 import java.net.URI;
 import java.net.URISyntaxException;
 
-import static com.kirinalex.BankBackOffice.utils.ErrorsUtil.generateErrorMessage;
+import static com.kirinalex.BankBackOffice.utils.ErrorsUtil.*;
 
 @Controller
 @RequestMapping("/authority")
 @AllArgsConstructor
 @Slf4j
+@Validated
 @Api(value = "AuthorityController")
 public class AuthorityController {
 
@@ -37,6 +36,7 @@ public class AuthorityController {
     private final AuthorityService authorityService;
 
     @PostMapping
+    @Validated(ValidationMarker.OnCreate.class)
     @ApiOperation(value = "Добавление authority")
     public ResponseEntity<Object> create(@RequestBody @Valid Authority authority,
                                                       BindingResult bindingResult) throws BadRequestException, JsonProcessingException, URISyntaxException {
@@ -51,6 +51,7 @@ public class AuthorityController {
     }
 
     @PutMapping
+    @Validated(ValidationMarker.OnUpdate.class)
     @ApiOperation(value = "Изменение authority")
     public ResponseEntity<Object> update(@RequestBody @Valid Authority authority, HttpServletRequest httpRequest,
                                                       BindingResult bindingResult) throws BadRequestException, JsonProcessingException {
@@ -91,20 +92,12 @@ public class AuthorityController {
             return errorResponseNotFound(id, httpRequest);
         }
 
-        return new ResponseEntity<>(authority, HttpStatus.OK);
-    }
-
-    protected void checkBindingResult(BindingResult bindingResult, Authority authority) throws BadRequestException, JsonProcessingException {
-        if (bindingResult.hasErrors()) {
-            var message = generateErrorMessage(bindingResult.getFieldErrors());
-            log.error("{}. {}", message, authority, new Throwable());
-            throw new BadRequestException(message);
-        }
+        return ResponseEntity.ok(authority);
     }
 
     private ResponseEntity<Object> errorResponseNotFound(int idAuthority, HttpServletRequest httpRequest){
         var status = HttpStatus.NOT_FOUND;
         var error =  new ErrorResponse(status, "Не найдено authority с id = " + idAuthority, httpRequest);
-        return new ResponseEntity<>(error, status);
+        return ResponseEntity.status(status).body(error);
     }
 }

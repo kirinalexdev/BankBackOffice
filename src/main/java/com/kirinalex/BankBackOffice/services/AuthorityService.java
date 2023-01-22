@@ -16,6 +16,7 @@ import java.util.Optional;
 @AllArgsConstructor
 @Transactional
 public class AuthorityService {
+
     private final AuthorityRepository authorityRepositoryy;
 
     public void save(Authority authority){

@@ -12,6 +12,7 @@ import java.sql.Timestamp;
 @Setter
 @AllArgsConstructor
 public class ErrorResponse {
+
     private Timestamp timestamp;
     private int status;
     private String error;

@@ -11,10 +11,10 @@ import org.springframework.stereotype.Service;
 @Service
 @AllArgsConstructor
 public class KafkaProducer {
+
     private KafkaTemplate<String, CardOrder> kafkaTemplate;
 
     public void sendMessage(CardOrder cardOrder){
-
         Message<CardOrder> message = MessageBuilder
                 .withPayload(cardOrder)
                 .setHeader(KafkaHeaders.TOPIC, "backoffice.cardorder")

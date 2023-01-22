@@ -15,8 +15,7 @@ public class UtilConfig {
     //      в названии сейчас есть employee, но там могут и другие мапинги добавиться
     @Bean
     public ModelMapper employeeModelMapper(){
-        var modelMapper = new ModelMapper();
-        return modelMapper;
+        return new ModelMapper();
     }
 
     @Bean

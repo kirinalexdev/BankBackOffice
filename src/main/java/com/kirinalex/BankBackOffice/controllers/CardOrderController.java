@@ -10,6 +10,7 @@ import com.kirinalex.BankBackOffice.services.CardOrderService;
 import com.kirinalex.BankBackOffice.utils.BadRequestException;
 import com.kirinalex.BankBackOffice.utils.CurrencyRateException;
 import com.kirinalex.BankBackOffice.utils.ErrorResponse;
+import com.kirinalex.BankBackOffice.utils.ValidationMarker;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.AllArgsConstructor;
@@ -19,6 +20,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -29,19 +31,22 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static com.kirinalex.BankBackOffice.utils.ErrorsUtil.generateErrorMessage;
+import static com.kirinalex.BankBackOffice.utils.ErrorsUtil.*;
 
 @RestController
 @RequestMapping(value = "/card-order", produces = "application/json") // produces для swagger
 @AllArgsConstructor
 @Slf4j
+@Validated
 @Api(value = "CardOrderController")
 public class CardOrderController  {
+
     private final CardOrderService cardOrderService;
     private final ModelMapper employeeModelMapper;
     private final ObjectMapper objectMapper;
 
     @PostMapping
+    @Validated(ValidationMarker.OnCreate.class)
     @ApiOperation(value = "Добавление заявки")
     public ResponseEntity<Object> create(@RequestBody @Valid CardOrderDTO cardOrderDTO,
                        BindingResult bindingResult) throws BadRequestException, JsonProcessingException, URISyntaxException {
@@ -57,6 +62,7 @@ public class CardOrderController  {
     }
 
     @PutMapping
+    @Validated(ValidationMarker.OnUpdate.class)
     @ApiOperation(value = "Изменение заявки")
     public ResponseEntity<Object> update(@RequestBody @Valid CardOrderDTO cardOrderDTO, HttpServletRequest httpRequest,
                        BindingResult bindingResult) throws BadRequestException, JsonProcessingException {
@@ -73,7 +79,7 @@ public class CardOrderController  {
         employeeModelMapper.map(cardOrderDTO, cardOrder);
         cardOrderService.update(cardOrder);
 
-        return new ResponseEntity<>(null, HttpStatus.OK);
+        return ResponseEntity.ok().build();
     }
 
     @DeleteMapping
@@ -98,7 +104,7 @@ public class CardOrderController  {
         }
 
         var cardOrderDTO= employeeModelMapper.map(cardOrder, CardOrderDTO.class);
-        return new ResponseEntity<>(cardOrderDTO, HttpStatus.OK);
+        return ResponseEntity.status(HttpStatus.OK).body(cardOrderDTO);
     }
 
     @ApiOperation(value = "Заявки за период")
@@ -126,18 +132,10 @@ public class CardOrderController  {
         return cardOrderService.monthlyTotals(fromDate, toDate, currency);
     }
 
-    private void checkBindingResult (BindingResult bindingResult, CardOrderDTO cardOrderDTO) throws BadRequestException, JsonProcessingException {
-        if (bindingResult.hasErrors()) {
-            var message = generateErrorMessage(bindingResult.getFieldErrors());
-            log.error("{}. cardOrderDTO:{}", message, objectMapper.writeValueAsString(cardOrderDTO), new Throwable());
-            throw new BadRequestException(message);
-        }
-    }
-
     private ResponseEntity<Object> errorResponseNotFound(int idCardOrder, HttpServletRequest httpRequest){
         var status = HttpStatus.NOT_FOUND;
         var error =  new ErrorResponse(status, "Не найдена заявка с id = " + idCardOrder, httpRequest);
-        return new ResponseEntity<>(error, status);
+        return ResponseEntity.status(status).body(error);
     }
 
 }

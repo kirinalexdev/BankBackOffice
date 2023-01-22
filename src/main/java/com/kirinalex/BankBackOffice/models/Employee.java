@@ -21,6 +21,7 @@ import java.util.*;
 @Builder
 @AllArgsConstructor // нужно для @Builder
 @NoArgsConstructor
+@ToString
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class Employee {
 
@@ -55,15 +56,5 @@ public class Employee {
     public void removeContact(Contact contact) {
         contacts.remove(contact);
         contact.setEmployee(null);
-    }
-
-    @Override
-    public String toString() {
-        return "Employee{" +
-                "id=" + id +
-                ", firstName='" + firstName + '\'' +
-                ", lastName='" + lastName + '\'' +
-                ", birthday=" + birthday +
-                '}';
     }
 }

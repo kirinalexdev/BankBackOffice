@@ -16,6 +16,7 @@ import java.util.List;
 
 @Component
 public class CardOrderDAO {
+
     @PersistenceContext
     private EntityManager entityManager;
 

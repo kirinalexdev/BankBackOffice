@@ -1,6 +1,7 @@
 package com.kirinalex.BankBackOffice.utils;
 
 import lombok.extern.slf4j.Slf4j;
+import javax.validation.ConstraintViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -17,14 +18,21 @@ public class ExceptionsHandler extends ResponseEntityExceptionHandler {
     public ResponseEntity<ErrorResponse> badRequestExceptionHandler(HttpServletRequest httpRequest, BadRequestException ex) {
         var status = HttpStatus.BAD_REQUEST;
         var error = new ErrorResponse(status, ex.getMessage(), httpRequest);
-        return new ResponseEntity<>(error, status);
+        return ResponseEntity.status(status).body(error);
     }
 
     @ExceptionHandler(CurrencyRateException.class)
     public ResponseEntity<ErrorResponse> currencyRateExceptionHandler(HttpServletRequest httpRequest, CurrencyRateException ex) {
         var status = ex.getStatus();
         var error = new ErrorResponse(status, ex.getMessage(), httpRequest);
-        return new ResponseEntity<>(error, status);
+        return ResponseEntity.status(status).body(error);
+    }
+
+    @ExceptionHandler(ConstraintViolationException.class)
+    public ResponseEntity<ErrorResponse> constraintViolationExceptionHandler(HttpServletRequest httpRequest, ConstraintViolationException ex) {
+        var status = HttpStatus.BAD_REQUEST;
+        var error = new ErrorResponse(status, ex.getMessage(), httpRequest);
+        return ResponseEntity.status(status).body(error);
     }
 
     @ExceptionHandler(Exception.class)
@@ -33,7 +41,7 @@ public class ExceptionsHandler extends ResponseEntityExceptionHandler {
 
         var status = HttpStatus.INTERNAL_SERVER_ERROR;
         var error = new ErrorResponse(status, "Ошибка приложения", httpRequest);
-        return new ResponseEntity<>(error, status);
+        return ResponseEntity.status(status).body(error);
     }
 }
 

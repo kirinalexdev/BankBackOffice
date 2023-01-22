@@ -8,6 +8,7 @@ import com.kirinalex.BankBackOffice.models.Employee;
 import com.kirinalex.BankBackOffice.services.EmployeeService;
 import com.kirinalex.BankBackOffice.utils.BadRequestException;
 import com.kirinalex.BankBackOffice.utils.ErrorResponse;
+import com.kirinalex.BankBackOffice.utils.ValidationMarker;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.*;
@@ -16,6 +17,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -24,20 +26,23 @@ import javax.validation.Valid;
 import java.net.URI;
 import java.net.URISyntaxException;
 
-import static com.kirinalex.BankBackOffice.utils.ErrorsUtil.generateErrorMessage;
+import static com.kirinalex.BankBackOffice.utils.ErrorsUtil.*;
 
 @RestController
 @RequestMapping(value = "/employee", produces = "application/json") // produces для swagger
 @Setter
 @AllArgsConstructor
 @Slf4j
+@Validated
 @Api(value = "EmployeeController")
 public class EmployeeController {
+
     private EmployeeService employeeService;
     private ModelMapper employeeModelMapper;
 
-    @ApiOperation(value = "Добавление сотрудника")
     @PostMapping
+    @Validated(ValidationMarker.OnCreate.class)
+    @ApiOperation(value = "Добавление сотрудника")
     public ResponseEntity<Object> create(@RequestBody @Valid EmployeeDTO employeeDTO,
                        BindingResult bindingResult) throws BadRequestException, JsonProcessingException, URISyntaxException {
 
@@ -53,6 +58,7 @@ public class EmployeeController {
     }
 
     @PutMapping
+    @Validated(ValidationMarker.OnUpdate.class)
     @ApiOperation(value = "Изменение данных сотрудника")
     public ResponseEntity<Object> update(@RequestBody @Valid EmployeeDTO employeeDTO,
                                          BindingResult bindingResult,
@@ -70,7 +76,7 @@ public class EmployeeController {
         employeeModelMapper.map(employeeDTO, employee);
         employeeService.save(employee);
 
-        return new ResponseEntity<>(null, HttpStatus.OK);
+        return ResponseEntity.ok().build();
 
         // TODO Сделать возможность удаления контактов. Сейчас же используется версия 2.1.1 ModelMapper,
         //      в которой нет такошго свойства modelMapper.getConfiguration().setCollectionsMergeEnabled(false);
@@ -102,21 +108,13 @@ public class EmployeeController {
         }
 
         var employeeDTO= employeeModelMapper.map(employee, EmployeeDTO.class);
-        return new ResponseEntity<>(employeeDTO, HttpStatus.OK);
-    }
-
-    protected void checkBindingResult(BindingResult bindingResult, EmployeeDTO employeeDTO) throws BadRequestException, JsonProcessingException {
-        if (bindingResult.hasErrors()) {
-            var message = generateErrorMessage(bindingResult.getFieldErrors());
-            log.error("{}. {}", message, employeeDTO, new Throwable());
-            throw new BadRequestException(message);
-        }
+        return ResponseEntity.ok(employeeDTO);
     }
 
     private ResponseEntity<Object> errorResponseNotFound(int idEmployee, HttpServletRequest httpRequest){
         var status = HttpStatus.NOT_FOUND;
         var error =  new ErrorResponse(status, "Не найден сотрудник с id = " + idEmployee, httpRequest);
-        return new ResponseEntity<>(error, status);
+        return ResponseEntity.status(status).body(error);
     }
 
 }

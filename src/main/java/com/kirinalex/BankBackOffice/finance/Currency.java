@@ -19,17 +19,17 @@ public class Currency {
 
     public static double currencyRate(String baseCurrency) throws CurrencyRateException {
 
-        String url = "https://currate.ru/api/?get=rates&pairs={pair}&key={APIKEY}";
-        String APIKEY = "b55fd8a9dbf46c8c7f1d959e1635f03c";
-        String quotedCurrency = "RUB";
-        String pair = baseCurrency + quotedCurrency;
-        String prefixErrorMessage = "Не удалось получить курс валюты. ";
+        var url = "https://currate.ru/api/?get=rates&pairs={pair}&key={APIKEY}";
+        var APIKEY = "b55fd8a9dbf46c8c7f1d959e1635f03c";
+        var quotedCurrency = "RUB";
+        var pair = baseCurrency + quotedCurrency;
+        var prefixErrorMessage = "Не удалось получить курс валюты. ";
 
-        Map<String, String> params = new HashMap<>();
+        var params = new HashMap<>();
         params.put("pair", pair);
         params.put("APIKEY", APIKEY);
 
-        RestTemplate restTemplate = new RestTemplate();
+        var restTemplate = new RestTemplate();
         ResponseEntity<String> response;
         try {
             response = restTemplate.getForEntity(url, String.class, params);
@@ -42,7 +42,7 @@ public class Currency {
             throw new CurrencyRateException(prefixErrorMessage, response.getStatusCode());
         }
 
-        ObjectMapper mapper = new ObjectMapper();
+        var mapper = new ObjectMapper();
         JsonNode rootNode;
         var responseBody = response.getBody();
         try {

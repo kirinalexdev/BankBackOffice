@@ -7,6 +7,8 @@ import com.kirinalex.BankBackOffice.services.UserService;
 import com.kirinalex.BankBackOffice.utils.BadRequestException;
 import com.kirinalex.BankBackOffice.utils.ErrorResponse;
 import com.kirinalex.BankBackOffice.utils.UserValidator;
+//import com.kirinalex.BankBackOffice.utils.UserValidator2;
+import com.kirinalex.BankBackOffice.utils.ValidationMarker;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.AllArgsConstructor;
@@ -15,6 +17,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -23,12 +26,13 @@ import javax.validation.Valid;
 import java.net.URI;
 import java.net.URISyntaxException;
 
-import static com.kirinalex.BankBackOffice.utils.ErrorsUtil.generateErrorMessage;
+import static com.kirinalex.BankBackOffice.utils.ErrorsUtil.*;
 
 @Controller
 @RequestMapping("/user")
 @AllArgsConstructor
 @Slf4j
+@Validated
 @Api(value = "UserController")
 public class UserController {
 
@@ -36,6 +40,7 @@ public class UserController {
     private final UserService userService;
 
     @PostMapping
+    @Validated(ValidationMarker.OnCreate.class)
     @ApiOperation(value = "Создание пользователя")
     public ResponseEntity<Object> create(@RequestBody @Valid User user,
                                                       BindingResult bindingResult) throws BadRequestException, JsonProcessingException, URISyntaxException {
@@ -50,6 +55,7 @@ public class UserController {
     }
 
     @PutMapping
+    @Validated(ValidationMarker.OnUpdate.class)
     @ApiOperation(value = "Изменение пользователя")
     public ResponseEntity<Object> update(@RequestBody @Valid User user, HttpServletRequest httpRequest,
                                                       BindingResult bindingResult) throws BadRequestException, JsonProcessingException {
@@ -63,7 +69,6 @@ public class UserController {
         }
 
         userService.save(user);
-
         return ResponseEntity.ok().build();
     }
 
@@ -90,20 +95,12 @@ public class UserController {
             return errorResponseNotFound(id, httpRequest);
         }
 
-        return new ResponseEntity<>(user, HttpStatus.OK);
-    }
-
-    protected void checkBindingResult(BindingResult bindingResult, User user) throws BadRequestException, JsonProcessingException {
-        if (bindingResult.hasErrors()) {
-            var message = generateErrorMessage(bindingResult.getFieldErrors());
-            log.error("{}. {}", message, user, new Throwable());
-            throw new BadRequestException(message);
-        }
+        return ResponseEntity.status(HttpStatus.OK).body(user);
     }
 
     private ResponseEntity<Object> errorResponseNotFound(int idUser, HttpServletRequest httpRequest){
         var status = HttpStatus.NOT_FOUND;
         var error =  new ErrorResponse(status, "Не найден пользователь с id = " + idUser, httpRequest);
-        return new ResponseEntity<>(error, status);
+        return ResponseEntity.status(status).body(error);
     }
 }

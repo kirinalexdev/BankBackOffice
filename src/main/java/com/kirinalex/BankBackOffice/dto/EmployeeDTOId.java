@@ -12,5 +12,7 @@ import lombok.*;
 @EqualsAndHashCode
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class EmployeeDTOId {
+
     private int id;
+
 }

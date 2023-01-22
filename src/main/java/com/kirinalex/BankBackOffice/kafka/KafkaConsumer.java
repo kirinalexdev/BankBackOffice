@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 @Service
 @AllArgsConstructor
 public class KafkaConsumer {
+
     private final CardOrderService cardOrderService;
 
     @KafkaListener(topics = "backoffice.cardorder", groupId = "backoffice")

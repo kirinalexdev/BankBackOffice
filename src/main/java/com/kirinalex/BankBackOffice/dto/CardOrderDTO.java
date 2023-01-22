@@ -2,10 +2,12 @@ package com.kirinalex.BankBackOffice.dto;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import com.kirinalex.BankBackOffice.utils.ValidationMarker;
 import lombok.*;
 
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Null;
 import javax.validation.constraints.Size;
 import java.math.BigDecimal;
 
@@ -18,7 +20,9 @@ import java.math.BigDecimal;
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class CardOrderDTO {
 
-    private int id;
+    @Null(groups = ValidationMarker.OnCreate.class)
+    @NotNull(groups = ValidationMarker.OnUpdate.class)
+    private Integer id;
 
     @NotNull
     private EmployeeDTOId agent;
