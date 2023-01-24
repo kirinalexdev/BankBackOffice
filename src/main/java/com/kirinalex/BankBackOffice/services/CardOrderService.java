@@ -23,6 +23,7 @@ public class CardOrderService {
     private KafkaProducer kafkaProducer;
     private final CardOrderRepository cardOrderRepository;
     private final CardOrderDAO cardOrderDAO;
+    private final Currency currency;
 
     @Transactional
     public void save(CardOrder cardOrder) {
@@ -55,8 +56,8 @@ public class CardOrderService {
         return cardOrderDAO.topAgentsByOrdersCount(fromDate, toDate.plusNanos(999999999));
     }
 
-    public List<MonthlyTotalsDTO> monthlyTotals(LocalDateTime fromDate, LocalDateTime toDate, String currency) throws CurrencyRateException {
-        double currencyRate = Currency.currencyRate(currency);
+    public List<MonthlyTotalsDTO> monthlyTotals(LocalDateTime fromDate, LocalDateTime toDate, String currencyCode) throws CurrencyRateException {
+        double currencyRate = currency.currencyRate(currencyCode);
         return cardOrderDAO.monthlyTotals(fromDate, toDate, currencyRate);
     }
 }
