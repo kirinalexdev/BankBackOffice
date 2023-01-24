@@ -9,7 +9,9 @@ import org.hibernate.annotations.Cascade;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Past;
 import javax.validation.constraints.Size;
 import java.time.LocalDate;
 import java.util.*;
@@ -32,12 +34,12 @@ public class Employee {
 
     @Column(name = "first_name", length = 100, nullable = false)
     @Size(min = 2, max = 100)
-    @NotNull
+    @NotBlank
     private String firstName;
 
     @Column(name = "last_name", length = 100, nullable = false)
     @Size(min = 2, max = 100)
-    @NotNull
+    @NotBlank
     private String lastName;
 
     @OneToMany(mappedBy = "employee", cascade = CascadeType.ALL, orphanRemoval = true)
@@ -46,6 +48,7 @@ public class Employee {
     @Column(name = "birthday", nullable = false)
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     @NotNull
+    @Past
     private LocalDate birthday;
 
     public void addContact(Contact contact) {

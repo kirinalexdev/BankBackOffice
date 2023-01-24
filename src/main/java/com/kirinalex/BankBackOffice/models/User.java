@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
 import java.util.HashSet;
@@ -20,12 +21,13 @@ public class User {
     private int id;
 
     @Column(name = "username")
-    @NotEmpty
+    @NotBlank
     @Size(min = 2, max = 100)
     private String username;
 
     @Column(name = "password")
-    @NotEmpty
+    @NotBlank
+    @Size(min = 4, max = 100)
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String password;
 

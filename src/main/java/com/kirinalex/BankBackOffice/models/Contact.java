@@ -6,6 +6,7 @@ import com.kirinalex.BankBackOffice.enums.ContactType;
 import lombok.*;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.util.Objects;
@@ -27,7 +28,7 @@ public class Contact {
 
     @Column(name = "value", length = 100, nullable = false)
     @Size(min = 5, max = 100)
-    @NotNull
+    @NotBlank
     private String value;
 
     @ManyToOne
