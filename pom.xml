@@ -102,6 +102,7 @@
 	</dependencies>
 
 	<build>
+		<finalName>bankbackoffice</finalName>
 		<plugins>
 			<plugin>
 				<groupId>org.flywaydb</groupId>

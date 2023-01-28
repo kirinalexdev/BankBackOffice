@@ -58,11 +58,6 @@ public class EmployeeController {
         employeeModelMapper.map(employeeDTO, employee);
         employeeService.save(employee);
         return ResponseEntity.ok().build();
-
-        // TODO Сделать возможность удаления контактов. Сейчас же используется версия 2.1.1 ModelMapper,
-        //      в которой нет такошго свойства modelMapper.getConfiguration().setCollectionsMergeEnabled(false);
-        //      Причина по которой используется старая версия описана здсь привестим эту ссылку https://github.com/modelmapper/modelmapper/issues/479
-        // TODO Сделать возможность обновления контактов. Воможно сделать отдельный API для контактов.
     }
 
     @DeleteMapping
