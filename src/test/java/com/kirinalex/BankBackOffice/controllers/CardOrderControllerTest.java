@@ -284,7 +284,7 @@ class CardOrderControllerTest {
 
     @SneakyThrows
     @Test
-    public void givenPeriod_whenGetTopAgents_thenReturnListOfMap(){
+    public void givenPeriod_whenGetTopAgents_thenReturnListOfDTO(){
         // given
         var fromDate = LocalDateTime.of(2000,3,4, 0,0,0);
         var toDate = LocalDateTime.of(2000,3,5, 23,59,59);
@@ -320,7 +320,7 @@ class CardOrderControllerTest {
 
     @SneakyThrows
     @Test
-    public void givenPeriod_whenGetMonthlyTotals_thenReturnListOfMap(){
+    public void givenPeriod_whenGetMonthlyTotals_thenReturnListOfDTO(){
         // given
         var fromDate = LocalDateTime.of(2000,3,4, 0,0,0);
         var toDate = LocalDateTime.of(2000,3,5, 23,59,59);

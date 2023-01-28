@@ -41,7 +41,7 @@ class CardOrderRepositoryTest {
     private ObjectMapper objectMapper;
 
     @Test
-    void givenCardOrders_whenGetMonthlyTotals_thenReturnListOfMap() {
+    void givenCardOrders_whenGetMonthlyTotals_thenReturnListOfDTO() {
         // given
         var fromDate = LocalDateTime.of(2000,2, 1, 0, 0, 0);
         var toDate = LocalDateTime.of(2000, 5, 31,23,59,59, 999999*1000);
@@ -74,7 +74,7 @@ class CardOrderRepositoryTest {
     }
 
     @Test
-    void givenCardOrders_whenGetTopAgents_thenReturnListOfMap() {
+    void givenCardOrders_whenGetTopAgents_thenReturnListOfDTO() {
 
         // given
         var fromDate = LocalDateTime.of(2000,2, 1, 0, 0, 0);
