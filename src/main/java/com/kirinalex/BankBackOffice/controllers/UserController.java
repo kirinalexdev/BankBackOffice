@@ -6,7 +6,6 @@ import com.kirinalex.BankBackOffice.models.User;
 import com.kirinalex.BankBackOffice.services.UserService;
 import com.kirinalex.BankBackOffice.exceptions.BadRequestException;
 import com.kirinalex.BankBackOffice.utils.UserValidator;
-//import com.kirinalex.BankBackOffice.utils.UserValidator2;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.AllArgsConstructor;

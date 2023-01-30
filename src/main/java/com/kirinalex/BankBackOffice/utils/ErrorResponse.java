@@ -1,9 +1,6 @@
 package com.kirinalex.BankBackOffice.utils;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
 import org.springframework.http.HttpStatus;
 
 import javax.servlet.http.HttpServletRequest;

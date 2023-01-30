@@ -1,7 +1,6 @@
 package com.kirinalex.BankBackOffice.controllers;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.kirinalex.BankBackOffice.dto.CardOrderDTO;
 import com.kirinalex.BankBackOffice.dto.MonthlyTotalsDTO;
 import com.kirinalex.BankBackOffice.dto.TopAgentsByOrdersDTO;
@@ -23,7 +22,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
-import java.net.URI;
 import java.net.URISyntaxException;
 import java.time.LocalDateTime;
 import java.util.List;

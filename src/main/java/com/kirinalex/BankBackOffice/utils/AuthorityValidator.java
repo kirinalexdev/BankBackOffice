@@ -3,7 +3,6 @@ package com.kirinalex.BankBackOffice.utils;
 import com.kirinalex.BankBackOffice.models.Authority;
 import com.kirinalex.BankBackOffice.models.User;
 import com.kirinalex.BankBackOffice.repositories.AuthorityRepository;
-import com.kirinalex.BankBackOffice.repositories.UserRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
