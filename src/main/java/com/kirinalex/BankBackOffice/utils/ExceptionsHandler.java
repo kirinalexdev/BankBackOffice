@@ -50,7 +50,8 @@ public class ExceptionsHandler extends ResponseEntityExceptionHandler {
         log.error(ex.getMessage(), ex);
 
         var status = HttpStatus.INTERNAL_SERVER_ERROR;
-        var error = new ErrorResponse(status, "Ошибка приложения", httpRequest);
+        var error = new ErrorResponse(status,
+        "Сервис недоступен. Если проблема не исчезнет, пожалуйста, свяжитесь с тех. поддержкой", httpRequest);
         return ResponseEntity.status(status).body(error);
     }
 }
