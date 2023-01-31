@@ -37,7 +37,7 @@ POST *http://[host]/api/v1/employee*
       "type": "PHONE"
     },
     {
-      "value":"ivanov@mail.ru",
+      "value":"petrov@mail.ru",
       "type": "EMAIL"
     }
   ]
