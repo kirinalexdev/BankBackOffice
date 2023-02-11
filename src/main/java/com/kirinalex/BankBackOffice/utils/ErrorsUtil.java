@@ -14,12 +14,13 @@ public class ErrorsUtil {
     public static String generateErrorMessage(List<FieldError> errors){
         var errorsSB = new StringBuilder();
 
-        for (FieldError error: errors) {
+        errors.forEach(error -> {
             errorsSB.append(error.getField());
             errorsSB.append(" - ");
             errorsSB.append(error.getDefaultMessage());
             errorsSB.append("; ");
-        }
+        });
+
         return errorsSB.toString();
     }
 

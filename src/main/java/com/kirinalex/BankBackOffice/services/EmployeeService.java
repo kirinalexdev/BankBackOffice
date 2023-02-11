@@ -19,10 +19,7 @@ public class EmployeeService {
     @Transactional
     public void save(Employee employee) {
         var contacts = employee.getContacts();
-        for (Contact contact: contacts) {
-            contact.setEmployee(employee);
-        }
-
+        contacts.forEach(contact -> contact.setEmployee(employee));
         employeeRepository.save(employee);
     }
 
