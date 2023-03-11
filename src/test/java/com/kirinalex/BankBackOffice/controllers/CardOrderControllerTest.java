@@ -54,7 +54,6 @@ class CardOrderControllerTest {
     @SpyBean
     private ModelMapper employeeModelMapper;
 
-
     @SneakyThrows
     @Test
     public void givenCardOrderDTO_whenCreateCardOrder_thenReturnIsCreated(){
@@ -198,7 +197,6 @@ class CardOrderControllerTest {
         assertThat(actualCardOrderDTO).isEqualTo(expectedCardOrderDTO);
     }
 
-
     @SneakyThrows
     @Test
     public void givenCardOrderId_whenFindNotExistCardOrder_thenReturnNotFound(){
@@ -216,6 +214,7 @@ class CardOrderControllerTest {
         // then
         response.andExpect(status().isNotFound());
     }
+
     @SneakyThrows
     @Test
     public void givenPeriod_whenFindCardOrder_thenReturnListCardOrderDTO(){

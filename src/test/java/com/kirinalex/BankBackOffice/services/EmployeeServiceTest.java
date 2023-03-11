@@ -46,7 +46,6 @@ class EmployeeServiceTest {
 
     @Test
     void givenEmployeeId_whenDelete_thenRepositoryDelete() {
-
         // given
         var employeeId = 2;
 
@@ -59,7 +58,6 @@ class EmployeeServiceTest {
 
     @Test
     void givenEmployeeId_whenFindById_thenReturnEmployee() {
-
         // given
         var employeeId = 2;
         var optionalEmployee = Optional.of(new Employee());
