@@ -11,17 +11,17 @@ import java.util.List;
 @Slf4j
 public class ErrorsUtil {
 
-    public static String generateErrorMessage(List<FieldError> errors){
-        var errorsSB = new StringBuilder();
+    public static String generateErrorMessage(List<FieldError> fieldErrors){
+        var errors = new StringBuilder();
 
-        errors.forEach(error -> {
-            errorsSB.append(error.getField());
-            errorsSB.append(" - ");
-            errorsSB.append(error.getDefaultMessage());
-            errorsSB.append("; ");
+        fieldErrors.forEach(error -> {
+            errors.append(error.getField());
+            errors.append(" - ");
+            errors.append(error.getDefaultMessage());
+            errors.append("; ");
         });
 
-        return errorsSB.toString();
+        return errors.toString();
     }
 
     public static void checkBindingResult(BindingResult bindingResult, Object object) throws BadRequestException, JsonProcessingException {
