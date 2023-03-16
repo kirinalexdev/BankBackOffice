@@ -55,4 +55,3 @@ public class ExceptionsHandler extends ResponseEntityExceptionHandler {
         return ResponseEntity.status(status).body(error);
     }
 }
-
